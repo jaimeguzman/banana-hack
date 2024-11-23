@@ -67,12 +67,13 @@ const CreateProcessForm = () => {
     optionalSkills: [],
     start_date: '',
     end_date: '',
+    selectedDate: '', // NUEVO CAMPO PARA FECHA UNIFICADA
     modality: 'Presencial',
     status: 'Activo',
-    requested_by: '',
+    requested_by: 'admin',
     created_by: 'admin',
-    jobFunctions: '',
-    jobRequirements: ''
+    jobFunctions: 'Lorem Ipsum',
+    jobRequirements: 'Lorem Ipsum'
   });
 
   const [isClient, setIsClient] = useState(false);
@@ -116,7 +117,23 @@ const CreateProcessForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
- 
+  /**
+   * Genera las opciones de mes/año para los próximos 12 meses
+   * @returns {Array<{value: string, label: string}>} Array de opciones de fecha
+   */
+  const generateDateOptions = () => {
+    const options = [];
+    const currentDate = new Date();
+    
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() + i);
+      const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      const label = date.toLocaleDateString('es', { year: 'numeric', month: 'long' });
+      options.push({ value, label: label.charAt(0).toUpperCase() + label.slice(1) });
+    }
+    
+    return options;
+  };
 
   /**
    * Maneja los cambios en el multi-select de habilidades
@@ -141,8 +158,18 @@ const CreateProcessForm = () => {
     setIsSubmitting(true);
 
     try {
+      // Convertir selectedDate a start_date y end_date
+      const [year, month] = formData.selectedDate.split('-');
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0);
+
+      // Crear objeto processData sin selectedDate
+      const { selectedDate, ...restFormData } = formData;
+      
       const processData = {
-        ...formData,
+        ...restFormData,
+        start_date: startDate.toISOString().split('T')[0],
+        end_date: endDate.toISOString().split('T')[0],
         requiredSkills: formData.requiredSkills.map(skill => ({
           value: skill.value,
           label: skill.label,
@@ -159,7 +186,7 @@ const CreateProcessForm = () => {
       router.push(`/process/${createdProcess.id}`);
     } catch (error) {
       console.error('Error al crear el proceso:', error);
-      alert('Hubo un error al crear el proceso. Por favor, intenta de nuevo.');
+      toast.error('Hubo un error al crear el proceso. Por favor, intenta de nuevo.');
     } finally {
       setIsSubmitting(false);
     }
@@ -217,6 +244,18 @@ const CreateProcessForm = () => {
         <div className="grid grid-cols-3 gap-4 mb-4">
 
 
+        <input
+            color="primary"
+            variant="bordered"
+            type="text"
+            name="name"
+            placeholder="Nombre del Kairo"
+            value={formData.name}
+            onChange={handleInputChange}
+            className="border p-2 rounded"
+            required
+          />
+
 
           <BankSelect 
             banks={banks}
@@ -243,42 +282,23 @@ const CreateProcessForm = () => {
  
  
         </div>
-        <div className="col-span-3 grid grid-cols-2 gap-4 mb-6"> {/* Aumentar margen inferior */}
-        <p className="col-span-12 font-semibold">Indíca la duración del proceso de kairo</p>
-
+        <div className="col-span-3 mb-6">
+          <p className="col-span-12 font-semibold mb-4">Indíca el mes del proceso de kairo</p>
           <div>
-            <label htmlFor="start_date" className="block text-gray-700 text-sm font-bold mb-2">
-              Fecha de inicio
-            </label>
-            <input
-              color="primary"
-              variant="bordered"
-              lang="es"
-              type="date"
-              id="start_date"
-              name="start_date"
-              value={formData.start_date}
+            <select
+              name="selectedDate"
+              value={formData.selectedDate}
               onChange={handleInputChange}
-              className="border p-2 rounded w-full"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
               required
-            />
-          </div>
-          <div>
-            <label htmlFor="end_date" className="block text-gray-700 text-sm font-bold mb-2">
-              Fecha de término
-            </label>
-            <input
-              color="primary"
-              variant="bordered"
-              lang="es"
-              type="date"
-              id="end_date"
-              name="end_date"
-              value={formData.end_date}
-              onChange={handleInputChange}
-              className="border p-2 rounded w-full"
-              required
-            />
+            >
+              <option value="" disabled>Selecciona el mes</option>
+              {generateDateOptions().map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

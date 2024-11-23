@@ -11,7 +11,6 @@ import { useProcess } from '../../context/ProcessContext'
 import toast from 'react-toastify'
 import JobDetailsAccordion from '../modals/JobDetailsAccordion'
 import Button from '../ui/Button'
-import Dropdown from '../ui/Dropdown'
 import { Icon } from '@iconify/react'
 import { Chip } from '@nextui-org/react'
 
@@ -80,33 +79,6 @@ const ProcessHeader = ({ reloadCandidates }) => {
     )
   }
 
-  const dropdownItems = [
-    {
-      label: 'Editar',
-      onClick: () => handleOption('edit'),
-      visible: process.status !== 'Finalizado',
-    },
-    {
-      label: 'Pausar',
-      onClick: () => handleOption('pause'),
-      visible: process.status !== 'Finalizado',
-    },
-    {
-      label: 'Finalizar',
-      onClick: () => handleOption('finish'),
-      visible: process.status !== 'Finalizado',
-    },
-    {
-      label: 'Reactivar',
-      onClick: () => handleOption('reactivate'),
-      visible: process.status === 'Finalizado',
-    },
-    {
-      label: 'Eliminar',
-      onClick: () => handleOption('delete'),
-    },
-  ]
-
   return (
     <>
       {isModalOpen && (
@@ -138,7 +110,6 @@ const ProcessHeader = ({ reloadCandidates }) => {
             >
              Subir cartolas
             </Button>
-            <Dropdown items={dropdownItems} />
           </div>
         </div>
         <div className="grid grid-cols-3 text-base">
