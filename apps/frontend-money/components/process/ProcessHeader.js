@@ -142,7 +142,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
               }}
               isDisabled={process.status === 'Finalizado'}
             >
-              Procesar CV
+             Subir cartolas
             </Button>
             <Dropdown items={dropdownItems} />
           </div>
