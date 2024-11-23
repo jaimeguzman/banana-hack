@@ -23,9 +23,13 @@ import { handleError } from '../../utils/errorHandler';
  */
 export const fetchAllProcesses = async () => {
   try {
+    const userSession = localStorage.getItem('userSession');
+    const user = JSON.parse(userSession);
+
     const { data, error } = await supabase
       .from('processes')
       .select('*')
+      .eq('user_id', user.username)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
