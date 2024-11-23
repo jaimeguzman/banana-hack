@@ -1,16 +1,21 @@
 # app/routers.py
-import re
-import os
 import logging
-import boto3
-from fastapi import APIRouter, HTTPException, File, UploadFile, Form
-from fastapi.responses import JSONResponse
+import os
+import re
 from typing import List, Optional
-from supabase import create_client, Client
-from utils import extract_bank_document, calculate_match_score, insert_candidate_to_supabase
-from dotenv import load_dotenv
+
+import boto3
 from bs4 import BeautifulSoup
-from typing import Optional
+from dotenv import load_dotenv
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.responses import JSONResponse
+from supabase import Client, create_client
+
+from utils import (
+    calculate_match_score,
+    extract_bank_document,
+    insert_candidate_to_supabase,
+)
 
 # @TODO esto se debe recuperar de la base de datos.
 # Descripción del trabajo
@@ -48,9 +53,9 @@ supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_
 s3 = None
 if os.getenv("MODE_UPLOAD_DEBUG") != "true":
     s3 = boto3.client(
-        's3',
+        "s3",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_S3"),
-        aws_secret_access_key=os.getenv("AWS_SECRET_KEY_S3")
+        aws_secret_access_key=os.getenv("AWS_SECRET_KEY_S3"),
     )
 
 
@@ -66,15 +71,15 @@ def clean_html_text(html_content: str) -> str:
     """
     if not html_content:
         return ""
-    
+
     # Eliminar el HTML usando BeautifulSoup
-    soup = BeautifulSoup(html_content, 'html.parser')
-    clean_text = soup.get_text(separator=' ')
-    
+    soup = BeautifulSoup(html_content, "html.parser")
+    clean_text = soup.get_text(separator=" ")
+
     # Limpieza adicional
-    clean_text = re.sub(r'\s+', ' ', clean_text)  # Elimina espacios múltiples
+    clean_text = re.sub(r"\s+", " ", clean_text)  # Elimina espacios múltiples
     clean_text = clean_text.strip()  # Elimina espacios al inicio y final
-    
+
     return clean_text
 
 
@@ -92,24 +97,23 @@ async def get_job_description(process_id: str) -> Optional[str]:
         HTTPException: Si hay un error al recuperar los datos o el proceso no existe.
     """
     try:
-        response = supabase.table('processes') \
-            .select('job_functions, job_requirements') \
-            .eq('id', process_id) \
+        response = (
+            supabase.table("processes")
+            .select("job_functions, job_requirements")
+            .eq("id", process_id)
             .execute()
-        
+        )
+
         if not response.data or len(response.data) == 0:
             raise HTTPException(
-                status_code=404,
-                detail=f"Proceso con ID {process_id} no encontrado"
+                status_code=404, detail=f"Proceso con ID {process_id} no encontrado"
             )
 
         process_data = response.data[0]
         # Limpiar HTML de los campos
-        job_functions = clean_html_text(process_data.get('job_functions', ''))
-        job_requirements = clean_html_text(process_data.get('job_requirements', ''))
-        
- 
-        
+        job_functions = clean_html_text(process_data.get("job_functions", ""))
+        job_requirements = clean_html_text(process_data.get("job_requirements", ""))
+
         # Combina las funciones y requisitos del trabajo
         return f"""
         Job functions:
@@ -121,14 +125,14 @@ async def get_job_description(process_id: str) -> Optional[str]:
     except Exception as e:
         logger.error(f"Error al recuperar descripción del trabajo: {str(e)}")
         raise HTTPException(
-            status_code=500,
-            detail="Error al recuperar la descripción del trabajo"
+            status_code=500, detail="Error al recuperar la descripción del trabajo"
         )
+
 
 async def upload_to_s3(file_content: bytes, filename: str) -> str:
     """
     Sube un archivo a Amazon S3 y devuelve la URL del archivo.
-    
+
     Args:
         file_content (bytes): Contenido del archivo en bytes.
         filename (str): Nombre del archivo para almacenarlo en S3.
@@ -149,9 +153,12 @@ async def upload_to_s3(file_content: bytes, filename: str) -> str:
         raise HTTPException(status_code=500, detail="Error al subir el archivo a S3")
 
 
-
 @upload_router.post("/upload")
-async def upload_files(files: List[UploadFile] = File(...), process_id: str = Form(...), user_id: str = Form(...)):
+async def upload_files(
+    files: List[UploadFile] = File(...),
+    process_id: str = Form(...),
+    user_id: str = Form(...),
+):
     """
     Recibe múltiples archivos PDF y un ID de proceso, procesa los CVs y guarda la información en Supabase.
 
@@ -166,7 +173,6 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
         logger.info(f"Iniciando proceso de carga para el proceso: {process_id}")
         print(f"Iniciando proceso de carga para el proceso: {process_id}")
 
-
         if not process_id or process_id == "undefined":
             raise HTTPException(status_code=400, detail="ID de proceso no válido")
 
@@ -175,40 +181,22 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
         logger.info(f"EL JOB DESCRIPTION del proceso: {job_description}")
         print(f"EL JOB DESCRIPTION del proceso: {job_description}")
 
-
         results = []
         for file in files:
             if not file.filename.endswith(".pdf"):
-                raise HTTPException(status_code=400, detail=f"El archivo {file.filename} no es un PDF.")
+                raise HTTPException(
+                    status_code=400, detail=f"El archivo {file.filename} no es un PDF."
+                )
 
             content = await file.read()
 
+            client, product = extract_bank_document(content)
 
-            
-            # TODO: Modo de depuración activado. Desactivar antes de pasar a producción.
-            if os.getenv("DEBUG_EXTRACT_INFO_PDF", "false").lower() == "true":
-                # Valores de prueba cuando debug está activado
-                cv_info = {
-                    "nombre": "Cartola de Prueba",
-                    "email": "user@example.com",
-                    "telefono": "+56 9 1234 5678",
-                    "experiencia": "Experiencia de prueba en varias emrpesass",
-                    "educacion": "Ingeniería Comercial",
-                    "habilidades": ["JavaScript", "React", "Node.js", "Python"]
-                }
-                match_result = {
-                    "match_score": 0,
-                    "explanation": "mode debug"
-                }
-            else:
-                cv_info = extract_bank_document(content)
-
-                # 
-                # match_result = await calculate_match_score(
-                #     cv_info["experiencia"], 
-                #     job_description
-                # )
-
+            # @ TODO: Acá iría la recomendacion de AI
+            # match_result = await calculate_match_score(
+            #     cv_info["experiencia"],
+            #     job_description
+            # )
 
             # Subir a S3 si no está en modo debug
             s3_url = None
@@ -217,20 +205,19 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
 
             # @TODO: cada vez que se inserta debería guardarse la url del objeto PDF de s3
 
-            # Insertar datos en Supabase
-            # Se debe REFACTOR 
-            # APENAS ESTE OK EL JSON SE DEBE INSERTAR EN LA BASE DE DATOS
-            print(f"s3_url: {s3_url}")
-            insert_candidate_to_supabase(process_id, client=cv_info, user_id=user_id)
+            insert_candidate_to_supabase(
+                process_id, user_id=user_id, client=client, product=product
+            )
 
-
-            results.append({
-                "filename": file.filename,
-                "size": len(content),
-                "cv_info": cv_info
-                # "ai_score": match_result["match_score"],
-                # "match_feedback": match_result["explanation"] # ,  "s3_url": s3_url
-            })
+            results.append(
+                {
+                    "filename": file.filename,
+                    "size": len(content),
+                    "cv_info": client,
+                    # "ai_score": match_result["match_score"],
+                    # "match_feedback": match_result["explanation"] # ,  "s3_url": s3_url
+                }
+            )
 
         return JSONResponse(content={"processed_files": results})
 
@@ -240,6 +227,5 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
     except Exception as e:
         logger.error(f"Error en upload_files: {str(e)}", exc_info=True)
         raise HTTPException(
-            status_code=500, 
-            detail=f"Error al procesar los archivos: {str(e)}"
-            )
+            status_code=500, detail=f"Error al procesar los archivos: {str(e)}"
+        )

@@ -1,17 +1,18 @@
 # app/utils.py
+import io
+import logging
 import os
 import re
-import io
-import openai
-import logging
-from fastapi import HTTPException
-from supabase import create_client, Client
-from dotenv import load_dotenv
 
+import openai
 import PyPDF2
+from dotenv import load_dotenv
+from fastapi import HTTPException
+from supabase import Client, create_client
+
 from matcher_algo import calculate_match_score
 from prompts.extract_client import extract_client
-
+from prompts.extract_product import extract_product
 
 # Cargar las variables desde el archivo .env
 load_dotenv()
@@ -153,9 +154,10 @@ def extract_bank_document(file_content: bytes) -> dict:
                 print(f"{key}: {value}")
         print("="*50 + "\n") """
 
-        result = extract_client(text)
+        client = extract_client(text)
+        product = extract_product(text)
 
-        return result
+        return client, product
 
     except Exception as e:
         print("\n" + "=" * 50)
@@ -193,12 +195,12 @@ def validate_phone_number(phone: str) -> str:
     return f"+{numbers}"
 
 
-def insert_candidate_to_supabase(process_id: str, client: dict, user_id: str) -> None:
+def insert_candidate_to_supabase(process_id: str,user_id: str, client: dict, product: dict) -> None:
     """
     Inserta la información del candidato en la base de datos de Supabase.
 
     Args:
-        cv_info (dict): Información extraída del CV.
+        process_id (dict): kairo relacionado.
         match_result (dict): Resultado del cálculo de coincidencia.
         process_id (str): UUID del proceso.
 
@@ -208,9 +210,10 @@ def insert_candidate_to_supabase(process_id: str, client: dict, user_id: str) ->
     try:
         candidate_data = {
             "process_id": process_id,
+            "user_id": user_id,
             "status": "Postulado",
             "client": client,
-            "user_id": user_id,
+            "product": product,
         }
 
         # Log para debugging
