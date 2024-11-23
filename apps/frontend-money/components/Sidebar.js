@@ -16,7 +16,7 @@ const Sidebar = () => {
   const [processes, setProcesses] = useState([])
   const [filteredProcesses, setFilteredProcesses] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState(['Todos'])
+  const [filter, setFilter] = useState({ anchorKey: 'Todos' });
   const router = useRouter()
 
   useEffect(() => {
@@ -35,12 +35,15 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    if (filter.anchorKey && filter.anchorKey === 'Todos') {
-      setFilteredProcesses(processes)
+    if (!processes.length) return;
+    
+    if (filter.anchorKey === 'Todos') {
+      setFilteredProcesses(processes);
     } else {
-      setFilteredProcesses(processes.filter((process) => process.status === filter.anchorKey))
+      const filtered = processes.filter((process) => process.status === filter.anchorKey);
+      setFilteredProcesses(filtered);
     }
-  }, [filter]); //[filter, processes]);
+  }, [filter, processes]);
 
   /**
    * Redirige a la página de creación de un nuevo proceso
@@ -52,35 +55,36 @@ const Sidebar = () => {
   const statusArray = [
     { key: 'Todos', label: 'Mostrar todos' },
     { key: 'Activo', label: 'Activos' },
-    { key: 'Pausado', label: 'Pausados' },
     { key: 'Finalizado', label: 'Finalizados' },
   ]
 
   return (
     <aside className="w-64 min-h-screen overflow-y-auto text-white bg-gray-800">
       <div className="flex flex-col gap-3 p-4">
-        <h2 className="text-xl font-bold">Procesos</h2>
+        <h2 className="text-xl font-bold">Finanzas simples:</h2>
         <Button
           variant="solid"
           onClick={handleNewProcess}
           endContent={<Icon icon="fluent:add-12-filled" className="mt-1 text-base" />}
           className="w-full"
         >
-          Nuevo proceso
+          Nuevo Kairo
         </Button>
         <Select
           color="primary"
           variant="bordered"
           defaultSelectedKeys={['Todos']}
-          selectedKeys={filter}
-          onSelectionChange={setFilter}
+          selectedKeys={[filter.anchorKey]}
+          onSelectionChange={(keys) => setFilter({ anchorKey: Array.from(keys)[0] })}
           aria-labelledby="status"
           classNames={{
             value: '!text-white',
           }}
         >
-          {statusArray.map((animal) => (
-            <SelectItem key={animal.key}>{animal.label}</SelectItem>
+          {statusArray.map((status) => (
+            <SelectItem key={status.key} value={status.key}>
+              {status.label}
+            </SelectItem>
           ))}
         </Select>
         {loading ? (

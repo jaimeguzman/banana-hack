@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>Dashboard - ATS con OpenAI</title>
+        <title>Kairo - Simplifica tus finanzas, humanizando las fiananzas</title>
         <meta
           name="description"
           content="Dashboard principal del Applicant Tracking System powered by OpenAI"
