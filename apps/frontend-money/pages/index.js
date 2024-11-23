@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Layout from '../components/Layout'
 import ActionButtons from '../components/dashboard/ActionButtons'
 import KPISection from '../components/dashboard/KPISection'
+import PaymentsInformation from '../components/dashboard/PaymentsInformation'
 import RecentCandidates from '../components/dashboard/RecentCandidates'
 import CandidatesAttention from '../components/dashboard/CandidatesAttention'
 import AutomaticMessages from '../components/dashboard/AutomaticMessages'
@@ -17,18 +18,22 @@ export default function Home() {
         <title>Kairo - Simplifica tus finanzas, humanizando las fiananzas</title>
         <meta
           name="description"
-          content="Dashboard principal del Applicant Tracking System powered by OpenAI"
+          content="Humanizar las finanzas partiendo por leer lo imporatente."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {/* <ActionButtons /> */}
+
         <KPISection />
+
+        <div className="mt-8 space-y-6">
+          <PaymentsInformation />
+        </div>
+        
         <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
-          <RecentCandidates />
+          <CandidatesAttention />
           <div className="space-y-4">
-            <CandidatesAttention />
-            {/* <AutomaticMessages /> */}
+          {/* <RecentCandidates /> */}
           </div>
         </div>
       </main>

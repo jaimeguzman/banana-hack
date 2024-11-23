@@ -1,71 +1,84 @@
 import { Icon } from '@iconify/react'
 
 /**
- * Componente de sección de KPIs
- * @returns {JSX.Element} Componente de sección de KPIs
+ * @typedef {Object} CardData
+ * @property {string} cardNumber - Número de tarjeta
+ * @property {string} bank - Nombre del banco
+ * @property {number} totalIntereses - Total de intereses y cobros
+ * @property {Object} detalles - Desglose de intereses
+ */
+
+/**
+ * Componente que muestra el resumen de tarjeta de crédito
+ * @returns {JSX.Element} Componente de resumen de tarjeta
  */
 export default function KPISection() {
   // TODO: Conectar con el backend para obtener los datos reales
-  const kpis = {
-    procesosActivos: 12,
-    procesosFinalizados: 40,
-    candidatosEvaluados: 1200,
-    entrevistasPendientes: 17,
-    postulacionesTotales: 12000,
+  const cardData = {
+    cardNumber: '4687',
+    bank: 'Banco Falabella',
+    bankType: 'CMR',
+    totalIntereses: 113656,
+    detalles: {
+      facturaciones: 104340,
+      impuestos: 3233,
+      mora: 6083
+    }
   }
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-xl shadow-primary/5">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-        <KPIItem
-          icon="ph:tag-chevron-duotone"
-          label="Procesos Activos"
-          value={kpis.procesosActivos}
-        />
-        <KPIItem
-          icon="line-md:circle-twotone-to-confirm-circle-twotone-transition"
-          label="Procesos Finalizados"
-          value={kpis.procesosFinalizados}
-          classNames={{
-            icon: '!text-lime-500',
-          }}
-        />
-        <KPIItem
-          icon="tabler:progress-check"
-          label="Candidatos Evaluados"
-          value={kpis.candidatosEvaluados}
-        />
-        <KPIItem
-          icon="tabler:progress-alert"
-          label="Entrevistas Pendientes"
-          value={kpis.entrevistasPendientes}
-          classNames={{
-            icon: '!text-warning',
-          }}
-        />
-        <KPIItem
-          icon="material-symbols:arrow-upload-progress-rounded"
-          label="Postulaciones Totales"
-          value={kpis.postulacionesTotales}
-        />
+    <div className="flex gap-4">
+      {/* Tarjeta izquierda */}
+      <div className="w-2/3 p-6 bg-gray-100 rounded-lg">
+        <div className="flex justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-medium text-gray-700">{cardData.bankType}</h3>
+            <p className="text-sm text-gray-500">{cardData.bank}</p>
+          </div>
+          <button className="px-3 py-1 text-sm text-gray-600 bg-white rounded-lg">
+            Editar
+          </button>
+        </div>
+        <p className="mt-8 text-xl">*{cardData.cardNumber}</p>
+      </div>
+
+      {/* Resumen derecho */}
+      <div className="w-2/3 p-6 bg-white rounded-lg">
+        <div className="flex justify-between pb-4 mb-4 border-b">
+          <h2 className="text-base font-medium">Total de intereses y cobros</h2>
+          <p className="text-base font-semibold">${cardData.totalIntereses.toLocaleString()}</p>
+        </div>
+        
+        <div className="space-y-4">
+          <DetailRow 
+            label="Interés por facturaciones aplazadas"
+            value={cardData.detalles.facturaciones}
+          />
+          <DetailRow 
+            label="Impuestos por compras en cuotas"
+            value={cardData.detalles.impuestos}
+          />
+          <DetailRow 
+            label="Interés por demora en pagar"
+            value={cardData.detalles.mora}
+          />
+        </div>
       </div>
     </div>
   )
 }
 
 /**
- * Componente de item de KPI individual
+ * Componente para mostrar una fila de detalle
  * @param {Object} props - Propiedades del componente
- * @param {string} props.label - Etiqueta del KPI
- * @param {number} props.value - Valor del KPI
- * @returns {JSX.Element} Componente de item de KPI
+ * @param {string} props.label - Etiqueta del detalle
+ * @param {number} props.value - Valor monetario
  */
-function KPIItem({ label, value, icon, classNames = {} }) {
+function DetailRow({ label, value }) {
   return (
-    <div className="flex flex-col items-center gap-1">
-      <Icon icon={icon} className={`text-4xl text-primary ${classNames?.icon}`} />
-      <b className="text-2xl text-dark-blue">{value}</b>
-      <p className="text-sm text-neutral-600">{label}</p>
+    <div className="flex justify-between">
+      <p className="text-gray-500">{label}</p>
+      <p className="font-medium">${value.toLocaleString()}</p>
     </div>
   )
 }
