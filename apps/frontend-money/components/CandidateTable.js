@@ -211,120 +211,85 @@ const CandidateTable = () => {
 
   return (
     <div className="-mt-2 overflow-hidden bg-white rounded-lg shadow-xl shadow-primary/5">
-      {/* Tabs de navegación */}
-      <div className="flex border-b">
-        <button
-          className={`flex-1 py-2 px-4 transition-colors font-semibold ${
-            activeTab === 'candidates' ? 'bg-primary text-white' : 'text-neutral-600'
-          }`}
-          onClick={() => setActiveTab('candidates')}
-        >
-          <div className="flex items-center justify-center gap-2">
-            <span>Candidatos</span>
-            <Icon icon="ic:twotone-group" className="text-xl" />
-          </div>
-        </button>
-        <button
-          className={`flex-1 py-2 px-4 transition-colors font-semibold ${
-            activeTab === 'history' ? 'bg-primary text-white' : 'text-neutral-600'
-          }`}
-          onClick={() => setActiveTab('history')}
-        >
-          <div className="flex items-center justify-center gap-2">
-            <span>Historial</span>
-            <Icon icon="iconamoon:clock-duotone" className="text-xl" />
-          </div>
-        </button>
-      </div>
-
+      {/* Tabs de navegación eliminadas */}
       {/* Contenedor con altura mínima */}
       <div className="min-h-[400px] overflow-auto">
         {/* Tabla de candidatos */}
-        {activeTab === 'candidates' && (
-          <table className="w-full text-dark-blue">
-            <thead>
-              <tr className="bg-white">
-                <th className={styles.th}></th>
-                <th className="py-2 pl-0 pr-2 text-left">Tipo de Movimiento</th>
-                <th className="py-2 pl-0 pr-2 text-left">Fecha Actualización</th>
-                <th className={styles.th}>Prefiltro AI</th>
-                <th className={styles.th}>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {candidates.map((candidate) => {
-                // console.log(candidate)
-                const dropdownItems = [
-                  {
-                    label: 'Ver',
-                    onClick: () => handleOptionClick('ver', candidate.id),
-                  },
-                  {
-                    label: 'Agendar',
-                    onClick: () => handleOptionClick('agendar', candidate.id),
-                  },
-                  {
-                    label: 'Historial',
-                    onClick: () => handleOptionClick('historial', candidate.id),
-                  },
-                ]
-                return (
-                  <tr key={candidate.id} className="border-b hover:bg-gray-50">
-                    <td className="pl-4">
-                      <Dropdown items={dropdownItems} />
-                    </td>
-                    <td className="px-0">
-                      <div className="flex items-center gap-2">
-                        {candidate.linkedinUrl ? (
-                          <a href={candidate.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                            <Icon icon="devicon:linkedin" />
-                          </a>
-                        ) : (
-                          <Icon icon="devicon:linkedin" className="grayscale opacity-30" />
-                        )}
-                        <Link href={`/candidates/${candidate.id}`}>
-                          <span className="text-primary hover:brightness-75">{candidate.name}</span>
-                        </Link>
-                      </div>
-                    </td>
-                    <td className={styles.td}>{formatDate(candidate.updateDate)}</td>
-                    <td className={styles.td}>{formatDate(candidate.interviewDate)}</td>
-                    <td className={styles.td}>
-                      <Progress
-                        color={getScoreColor(candidate.aiScore)}
-                        value={candidate.aiScore}
-                      />
-                      <span className="text-xs">{candidate.aiScore}%</span>
-                    </td>
-                    <td className={styles.td}>
-                      <Select
-                        value={{ value: candidate.status, label: candidate.status }}
-                        onChange={(selectedOption) =>
-                          handleStatusChange(candidate.id, selectedOption.value)
-                        }
-                        options={VALID_CANDIDATE_STATUSES.map((status) => ({
-                          value: status,
-                          label: status,
-                        }))}
-                        className="w-full"
-                        classNamePrefix="react-select"
-                        isDisabled={process?.status === 'Finalizado'}
-                      />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        )}
-
-        {/* Contenido del historial */}
-        {activeTab === 'history' && (
-          <div className="p-4">
-            <p>Contenido del historial aquí</p>
-            <strong>Sección en construcción</strong>
-          </div>
-        )}
+        <table className="w-full text-dark-blue">
+          <thead>
+            <tr className="bg-white">
+              <th className={styles.th}></th>
+              <th className="py-2 pl-0 pr-2 text-left">Tipo de Movimiento</th>
+              <th className="py-2 pl-0 pr-2 text-left">Fecha Actualización</th>
+              <th className={styles.th}>Prefiltro AI</th>
+              <th className={styles.th}>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {candidates.map((candidate) => {
+              // console.log(candidate)
+              const dropdownItems = [
+                {
+                  label: 'Ver',
+                  onClick: () => handleOptionClick('ver', candidate.id),
+                },
+                {
+                  label: 'Agendar',
+                  onClick: () => handleOptionClick('agendar', candidate.id),
+                },
+                {
+                  label: 'Historial',
+                  onClick: () => handleOptionClick('historial', candidate.id),
+                },
+              ]
+              return (
+                <tr key={candidate.id} className="border-b hover:bg-gray-50">
+                  <td className="pl-4">
+                    <Dropdown items={dropdownItems} />
+                  </td>
+                  <td className="px-0">
+                    <div className="flex items-center gap-2">
+                      {candidate.linkedinUrl ? (
+                        <a href={candidate.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                          <Icon icon="devicon:linkedin" />
+                        </a>
+                      ) : (
+                        <Icon icon="devicon:linkedin" className="grayscale opacity-30" />
+                      )}
+                      <Link href={`/candidates/${candidate.id}`}>
+                        <span className="text-primary hover:brightness-75">{candidate.name}</span>
+                      </Link>
+                    </div>
+                  </td>
+                  <td className={styles.td}>{formatDate(candidate.updateDate)}</td>
+                  <td className={styles.td}>{formatDate(candidate.interviewDate)}</td>
+                  <td className={styles.td}>
+                    <Progress
+                      color={getScoreColor(candidate.aiScore)}
+                      value={candidate.aiScore}
+                    />
+                    <span className="text-xs">{candidate.aiScore}%</span>
+                  </td>
+                  <td className={styles.td}>
+                    <Select
+                      value={{ value: candidate.status, label: candidate.status }}
+                      onChange={(selectedOption) =>
+                        handleStatusChange(candidate.id, selectedOption.value)
+                      }
+                      options={VALID_CANDIDATE_STATUSES.map((status) => ({
+                        value: status,
+                        label: status,
+                      }))}
+                      className="w-full"
+                      classNamePrefix="react-select"
+                      isDisabled={process?.status === 'Finalizado'}
+                    />
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       </div>
       <ToastContainer />
     </div>
