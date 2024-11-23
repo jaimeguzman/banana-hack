@@ -1,0 +1,11 @@
+fastapi==0.100.0
+mangum==0.17.0
+uvicorn==0.22.0
+pydantic==1.10.9
+python-dotenv==1.0.0
+python-multipart==0.0.6
+openai==0.28.0
+boto3==1.28.0
+PyPDF2==3.0.1
+supabase==1.0.3
+beautifulsoup4==4.12.2
