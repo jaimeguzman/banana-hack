@@ -7,4 +7,5 @@
 - Se debe considerar los cambios en el front.
 
 - Agregar logs
+- Agregar validaciones
 
