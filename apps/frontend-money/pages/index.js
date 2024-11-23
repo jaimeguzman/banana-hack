@@ -22,13 +22,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <ActionButtons />
+        {/* <ActionButtons /> */}
         <KPISection />
         <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
           <RecentCandidates />
           <div className="space-y-4">
             <CandidatesAttention />
-            <AutomaticMessages />
+            {/* <AutomaticMessages /> */}
           </div>
         </div>
       </main>
