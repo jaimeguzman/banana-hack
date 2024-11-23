@@ -245,9 +245,8 @@ const CandidateTable = () => {
             <thead>
               <tr className="bg-white">
                 <th className={styles.th}></th>
-                <th className="py-2 pl-0 pr-2 text-left">Nombre Candidato</th>
+                <th className="py-2 pl-0 pr-2 text-left">Tipo de Movimiento</th>
                 <th className="py-2 pl-0 pr-2 text-left">Fecha Actualización</th>
-                <th className={styles.th}>Fecha Entrevista</th>
                 <th className={styles.th}>Prefiltro AI</th>
                 <th className={styles.th}>Estado</th>
               </tr>
