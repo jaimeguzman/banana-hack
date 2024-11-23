@@ -249,13 +249,6 @@ const CandidateTable = () => {
                   </td>
                   <td className="px-0">
                     <div className="flex items-center gap-2">
-                      {candidate.linkedinUrl ? (
-                        <a href={candidate.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                          <Icon icon="devicon:linkedin" />
-                        </a>
-                      ) : (
-                        <Icon icon="devicon:linkedin" className="grayscale opacity-30" />
-                      )}
                       <Link href={`/candidates/${candidate.id}`}>
                         <span className="text-primary hover:brightness-75">{candidate.name}</span>
                       </Link>
