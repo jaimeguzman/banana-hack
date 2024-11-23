@@ -178,7 +178,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           jobRequirements={process.job_requirements}
         />
         <div className="flex flex-col gap-1">
-          <h3 className="mr-1 font-semibold">Habilidades requeridas</h3>
+          <h3 className="mr-1 font-semibold">Categorías</h3>
           <div className="flex flex-wrap gap-1">
             {process.requiredSkills && process.requiredSkills.length > 0 ? (
               process.requiredSkills.map((skill) => (
@@ -188,7 +188,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
               ))
             ) : (
               <Chip color="primary" variant="dot">
-                No se han especificado habilidades
+                No se han especificado Categorías
               </Chip>
             )}
           </div>
