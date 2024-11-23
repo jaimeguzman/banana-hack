@@ -43,7 +43,7 @@ export default function KPISection() {
       </div>
 
       {/* Resumen derecho */}
-      <div className="w-2/3 p-6 bg-white rounded-lg">
+      <div className="w-2/3 p-6 bg-white rounded-lg border border-gray-200">
         <div className="flex justify-between pb-4 mb-4 border-b">
           <h2 className="text-base font-medium">Total de intereses y cobros</h2>
           <p className="text-base font-semibold">${cardData.totalIntereses.toLocaleString()}</p>

@@ -38,7 +38,7 @@ export default function PaymentsInformation() {
   return (
     <div className="flex gap-4">
       {/* Tarjeta izquierda - Período */}
-      <div className="w-1/2 p-6 bg-white rounded-lg shadow-sm">
+      <div className="w-1/2 p-6 bg-white rounded-lg border border-gray-200">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-gray-500 mb-1">Periodo de facturación</h2>
@@ -70,7 +70,7 @@ export default function PaymentsInformation() {
       </div>
 
       {/* Tarjeta derecha - Resumen */}
-      <div className="w-1/2 p-6 bg-white rounded-lg shadow-sm">
+      <div className="w-1/2 p-6 bg-white rounded-lg border border-gray-200">
         <div className="flex justify-between mb-6">
           <h2>Fecha a pagar</h2>
           <p className="text-right">
