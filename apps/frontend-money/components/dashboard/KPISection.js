@@ -27,7 +27,7 @@ export default function KPISection() {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 mt-[60px]">
       {/* Tarjeta izquierda */}
       <div className="w-2/3 p-6 bg-gray-100 rounded-lg">
         <div className="flex justify-between mb-4">

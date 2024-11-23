@@ -59,9 +59,9 @@ const Sidebar = () => {
   ]
 
   return (
-    <aside className="w-92 min-h-screen overflow-y-auto text-gray-800 bg-white border-r border-gray-200">
+    <aside className="w-92 min-h-screen overflow-y-auto text-gray-800 bg-white">
       <div className="flex flex-col gap-6 p-4">
-        <Link href="/" className="flex items-center justify-center py-4">
+        <Link href="/" className="flex items-center justify-center py-4 mb-10">
           <img src="/logo.png" alt="Logo" className="w-auto h-10" />
         </Link>
         <Button

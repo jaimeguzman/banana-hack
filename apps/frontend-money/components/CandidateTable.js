@@ -33,26 +33,6 @@ const CandidateTable = () => {
   const router = useRouter()
 
 
-/* merge things
-  useEffect(() => {
-    /**
-     * Maneja el cierre del menú de opciones al hacer clic fuera de él
-     * @function handleClickOutside
-     * @param {Event} event - El evento de clic
-     */
-/*
-    function handleClickOutside(event) {
-      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
-        setShowOptions(null);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-*/
 
 
 
