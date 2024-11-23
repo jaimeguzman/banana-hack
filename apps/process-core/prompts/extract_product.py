@@ -16,7 +16,7 @@ def extract_product(text: str) -> dict:
         tasas_interes_vigente_rotativo, tasas_interes_vigente compra_en_cuotas,tasas interes_vigente  avance_en_cuotas, cae rotativo, cae compra en cuotas.
         (Ten en cuenta que esto puede cambiar dependiendo del banco)
 
-        Responde en este formato JSON con las siguientes keys:
+        Responde en este formato JSON con las siguientes keys, idealmente sigue este ejemplo:
         {
         "producto": {
         "prop1": "valor1",
@@ -35,7 +35,6 @@ def extract_product(text: str) -> dict:
         ],
         temperature=0.2,
         max_tokens=800,
-        response_format={"type": "json_object"},
     )
     # Imprimir respuesta cruda de OpenAI
     print("\n" + "=" * 50)
@@ -55,12 +54,40 @@ def extract_product(text: str) -> dict:
         print(f"{key}: {value}")
     print("=" * 50 + "\n")
 
-    client = tc_data.get("cliente", {})
+    product = tc_data.get("producto", {})
 
     # Crear diccionario final
     result = {
-        "name": client.get("nombre", "No encontrado"),
-        "rut": client.get("rut", "No encontrado"),
+        "nombre_titular": product.get("nombre_titular", "No encontrado"),
+        "numero_tarjeta": product.get("numero_tarjeta", "No encontrado"),
+        "fecha_estado_cuenta": product.get("fecha_estado_cuenta", "No encontrado"),
+        "cupo_total": product.get("cupo_total", "No encontrado"),
+        "cupo_utilizado": product.get("cupo_utilizado", "No encontrado"),
+        "cupo_disponible": product.get("cupo_disponible", "No encontrado"),
+        "cupo_total_avance_efectivo": product.get(
+            "cupo_total_avance_efectivo", "No encontrado"
+        ),
+        "cupo_utilizado_avance_efectivo": product.get(
+            "cupo_utilizado_avance_efectivo", "No encontrado"
+        ),
+        "cupo_disponible_avance_efectivo": product.get(
+            "cupo_disponible_avance_efectivo", "No encontrado"
+        ),
+        "tasas_interes_vigente_rotativo": product.get(
+            "tasas_interes_vigente_rotativo", "No encontrado"
+        ),
+        "tasas_interes_vigente_compra_cuotas": product.get(
+            "tasas_interes_vigente_compra_cuotas", "No encontrado"
+        ),
+        "tasas_interes_vigente_avance_cuotas": product.get(
+            "tasas_interes_vigente_avance_cuotas", "No encontrado"
+        ),
+        "cae_rotativo": product.get("cae_rotativo", "No encontrado"),
+        "cae_compra_cuotas": product.get("cae_compra_cuotas", "No encontrado"),
+        "cae_avance_cuotas": product.get("cae_avance_cuotas", "No encontrado"),
+        "fecha_pagar_hasta": product.get("fecha_pagar_hasta", "No encontrado"),
+        "monto_total_facturado": product.get("monto_total_facturado", "No encontrado"),
+        "monto_minimo_pagar": product.get("monto_minimo_pagar", "No encontrado"),
     }
 
     # Debug del resultado final
