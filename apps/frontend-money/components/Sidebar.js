@@ -52,21 +52,20 @@ const Sidebar = () => {
   const statusArray = [
     { key: 'Todos', label: 'Mostrar todos' },
     { key: 'Activo', label: 'Activos' },
-    { key: 'Pausado', label: 'Pausados' },
     { key: 'Finalizado', label: 'Finalizados' },
   ]
 
   return (
     <aside className="w-64 min-h-screen overflow-y-auto text-white bg-gray-800">
       <div className="flex flex-col gap-3 p-4">
-        <h2 className="text-xl font-bold">Procesos</h2>
+        <h2 className="text-xl font-bold">Finanzas simples:</h2>
         <Button
           variant="solid"
           onClick={handleNewProcess}
           endContent={<Icon icon="fluent:add-12-filled" className="mt-1 text-base" />}
           className="w-full"
         >
-          Nuevo proceso
+          Nuevo Kairo
         </Button>
         <Select
           color="primary"

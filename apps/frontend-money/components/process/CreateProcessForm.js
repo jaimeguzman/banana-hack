@@ -21,7 +21,7 @@ const CreatableAsyncSelect = dynamic(
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 /**
- * Componente para crear un nuevo proceso de reclutamiento
+ * Componente para crear un nuevo proceso de kairo
  * @component
  * @returns {JSX.Element} Formulario para crear un nuevo proceso
  */
@@ -184,7 +184,7 @@ const CreateProcessForm = () => {
   return (
     <div className="p-4 space-y-4 bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
       <h2 className="text-2xl font-bold text-primary">Crear Nuevo Proceso</h2>
-      <p className="font-semibold">Especifica los detalles del proceso de reclutamiento</p>
+      <p className="font-semibold">Especifica los detalles del proceso de kairo</p>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4 mb-4">
           <input
@@ -244,7 +244,7 @@ const CreateProcessForm = () => {
           />
         </div>
         <div className="col-span-3 grid grid-cols-2 gap-4 mb-6"> {/* Aumentar margen inferior */}
-        <p className="col-span-12 font-semibold">Indíca la duración del proceso de reclutamiento</p>
+        <p className="col-span-12 font-semibold">Indíca la duración del proceso de kairo</p>
 
           <div>
             <label htmlFor="start_date" className="block text-gray-700 text-sm font-bold mb-2">
@@ -285,7 +285,7 @@ const CreateProcessForm = () => {
         <div className="col-span-3 grid grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="requiredSkills">
-              Habilidades requeridas
+              Clasificaciones financieras
             </label>
             {isClient && (
               <CreatableAsyncSelect
@@ -307,7 +307,7 @@ const CreateProcessForm = () => {
               />
             )}
           </div>
-          <div>
+          {/* <div>
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="optionalSkills">
               Habilidades opcionales
             </label>
@@ -330,10 +330,10 @@ const CreateProcessForm = () => {
                 loadingMessage={() => 'Cargando...'}
               />
             )}
-          </div>
+          </div> */}
         </div>
 
-        <div className="mb-4 mt-4">
+        {/* <div className="mb-4 mt-4">
           <label htmlFor="jobFunctions" className="block text-gray-700 text-sm font-bold mb-2">
             Funciones del Cargo
           </label>
@@ -352,9 +352,9 @@ const CreateProcessForm = () => {
               ]
             }}
           />
-        </div>
+        </div> */}
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="jobRequirements" className="block text-gray-700 text-sm font-bold mb-2">
             Requerimientos del Cargo
           </label>
@@ -373,7 +373,7 @@ const CreateProcessForm = () => {
               ]
             }}
           />
-        </div>
+        </div> */}
 
         <div className="flex justify-end mt-6">
           <button
