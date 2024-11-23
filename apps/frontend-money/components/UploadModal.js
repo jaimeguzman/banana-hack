@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { uploadFiles } from '../services/api'; // Asegúrate de actualizar este import
-import { FiX, FiTrash2 } from 'react-icons/fi';
-import { useProcess } from '../context/ProcessContext';
-import { useRouter } from 'next/router';
 import { Spinner } from '@nextui-org/react'; // Importamos Spinner de NextUI
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-hot-toast';
+import { FiTrash2, FiX } from 'react-icons/fi';
+import { useProcess } from '../context/ProcessContext';
+import { uploadFiles } from '../services/api'; // Asegúrate de actualizar este import
 
 /**
  * @typedef {Object} UploadModalProps
@@ -64,27 +64,31 @@ const UploadModal = ({ isOpen, onClose, onUpload, jobDescription, reloadCandidat
       setErrorMessage('Por favor, selecciona al menos un archivo PDF.');
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       const formData = new FormData();
       files.forEach((file) => formData.append('files', file));
-      
+
       const uploadProcessId = process?.id || router.query.id;
       if (!uploadProcessId) throw new Error('No se pudo obtener el ID del proceso');
-      
+
+      const userSession = localStorage.getItem('userSession');
+      const user = JSON.parse(userSession);
+
       formData.append('process_id', uploadProcessId);
+      formData.append('user_id', user.username);
       // console.log('Tipo de process_id:', typeof uploadProcessId);
       // console.log('Valor de process_id:', uploadProcessId);
 
       const result = await uploadFiles(formData);
-      
+
       // Esperar a que se complete la carga y luego recargar
       if (reloadCandidates) {
         await reloadCandidates();
       }
-      
+
       toast.success('Archivos procesados correctamente');
       onClose();
     } catch (error) {
@@ -152,7 +156,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, jobDescription, reloadCandidat
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" style={{zIndex: 1000}}>
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" style={{ zIndex: 1000 }}>
       <div className="bg-white p-5 rounded-lg w-full max-w-2xl mx-auto relative">
         {/* Overlay del Loader */}
         {isLoading && (
@@ -211,18 +215,17 @@ const UploadModal = ({ isOpen, onClose, onUpload, jobDescription, reloadCandidat
           </ul>
         )}
         <div className="flex justify-end items-center mt-4">
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="mr-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"
             disabled={isLoading} // Deshabilitamos durante la carga
           >
             Cancelar
           </button>
-          <button 
-            onClick={handleUpload} 
-            className={`px-4 py-2 bg-green-500 text-white rounded transition duration-300 ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
-            }`}
+          <button
+            onClick={handleUpload}
+            className={`px-4 py-2 bg-green-500 text-white rounded transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
+              }`}
             disabled={isLoading} // Deshabilitamos durante la carga
           >
             {isLoading ? 'Procesando...' : 'Subir y Procesar'}

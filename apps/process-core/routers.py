@@ -151,7 +151,7 @@ async def upload_to_s3(file_content: bytes, filename: str) -> str:
 
 
 @upload_router.post("/upload")
-async def upload_files(files: List[UploadFile] = File(...), process_id: str = Form(...)):
+async def upload_files(files: List[UploadFile] = File(...), process_id: str = Form(...), user_id: str = Form(...)):
     """
     Recibe múltiples archivos PDF y un ID de proceso, procesa los CVs y guarda la información en Supabase.
 
@@ -220,7 +220,8 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
             # Insertar datos en Supabase
             # Se debe REFACTOR 
             # APENAS ESTE OK EL JSON SE DEBE INSERTAR EN LA BASE DE DATOS
-            # insert_candidate_to_supabase(cv_info, match_result, process_id)
+            print(f"s3_url: {s3_url}")
+            insert_candidate_to_supabase(process_id, client=cv_info, user_id=user_id)
 
 
             results.append({

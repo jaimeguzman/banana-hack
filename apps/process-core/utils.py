@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 import PyPDF2
 from matcher_algo import calculate_match_score
+from prompts.extract_client import extract_client
 
 
 # Cargar las variables desde el archivo .env
@@ -33,18 +34,19 @@ file_content (bytes): Contenido del archivo PDF en bytes.
 Returns:
 dict: Diccionario con la información extraída del CV.
 """
+
+
 def extract_bank_document(file_content: bytes) -> dict:
- 
     try:
         # Extraer texto del PDF
         pdf_reader = PyPDF2.PdfReader(io.BytesIO(file_content))
         text = "".join(page.extract_text() for page in pdf_reader.pages)
-        
-        print("\n" + "="*50)
+
+        print("\n" + "=" * 50)
         print("TEXTO EXTRAÍDO DEL PDF:")
-        print("-"*50)
+        print("-" * 50)
         print(text[:1000] + "...")  # Primeros 500 caracteres
-        print("="*50 + "\n")
+        print("=" * 50 + "\n")
 
         # Prompt para OpenAI
         system_prompt = """
@@ -94,7 +96,7 @@ def extract_bank_document(file_content: bytes) -> dict:
         """
 
         # Llamada a OpenAI
-        response = openai.ChatCompletion.create(
+        """ response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -149,21 +151,23 @@ def extract_bank_document(file_content: bytes) -> dict:
                 print(f"{key}: [TEXTO COMPLETO OMITIDO]")
             else:
                 print(f"{key}: {value}")
-        print("="*50 + "\n")
+        print("="*50 + "\n") """
+
+        result = extract_client(text)
 
         return result
 
     except Exception as e:
-        print("\n" + "="*50)
+        print("\n" + "=" * 50)
         print("ERROR EN EXTRACCIÓN:")
-        print("-"*50)
+        print("-" * 50)
         print(f"Tipo de error: {type(e).__name__}")
         print(f"Mensaje de error: {str(e)}")
-        print("="*50 + "\n")
+        print("=" * 50 + "\n")
         raise HTTPException(
-            status_code=500,
-            detail=f"Error al procesar el CV: {str(e)}"
+            status_code=500, detail=f"Error al procesar el CV: {str(e)}"
         )
+
 
 def validate_phone_number(phone: str) -> str:
     """
@@ -176,19 +180,20 @@ def validate_phone_number(phone: str) -> str:
         str: Número de teléfono formateado o string vacío si es inválido.
     """
     # Eliminar caracteres no numéricos
-    numbers = re.sub(r'\D', '', phone)
-    
+    numbers = re.sub(r"\D", "", phone)
+
     # Validar longitud mínima (código país + número)
     if len(numbers) < 8:
         return ""
-        
+
     # Si no tiene código de país y es número válido, asumir +56
-    if not phone.startswith('+'):
+    if not phone.startswith("+"):
         return f"+56{numbers}"
-        
+
     return f"+{numbers}"
 
-def insert_candidate_to_supabase(cv_info: dict, match_result: dict, process_id: str) -> None:
+
+def insert_candidate_to_supabase(process_id: str, client: dict, user_id: str) -> None:
     """
     Inserta la información del candidato en la base de datos de Supabase.
 
@@ -203,31 +208,24 @@ def insert_candidate_to_supabase(cv_info: dict, match_result: dict, process_id: 
     try:
         candidate_data = {
             "process_id": process_id,
-            "name": cv_info["nombre"],
-            "email": cv_info["email"],
-            "phone": cv_info.get("telefono", "No encontrado"),
-            "linkedin_url": cv_info.get("linkedin_url", "No encontrado"),
-            "experience": cv_info["experiencia"],
-            "ai_score": match_result["match_score"],
             "status": "Postulado",
-            "match_feedback": match_result["explanation"]
+            "client": client,
+            "user_id": user_id,
         }
 
         # Log para debugging
         logger.debug(f"Insertando candidato con datos: {candidate_data}")
 
         response = supabase.table("candidates").insert(candidate_data).execute()
-        
-        if hasattr(response, 'error') and response.error is not None:
+
+        if hasattr(response, "error") and response.error is not None:
             raise HTTPException(
                 status_code=500,
-                detail=f"Error al insertar en Supabase: {response.error}"
+                detail=f"Error al insertar en Supabase: {response.error}",
             )
 
     except Exception as e:
         logger.error(f"Error al insertar candidato: {str(e)}")
         raise HTTPException(
-            status_code=500,
-            detail=f"Error al insertar candidato: {str(e)}"
+            status_code=500, detail=f"Error al insertar candidato: {str(e)}"
         )
- 
