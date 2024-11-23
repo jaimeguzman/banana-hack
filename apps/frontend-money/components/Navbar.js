@@ -16,12 +16,7 @@ export default function Navbar() {
       <nav className="p-4 bg-white shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center mt-1">
-            <Link href="/">
-              <img src="/logo.png" alt="Logo" className="w-auto h-8 mr-2" />
-            </Link>
             <div className="flex items-center gap-3 -mt-[14px] text-[30px]">
-              {/* <h4 className="font-bold text-primary">Mejora tu Salud Financiera</h4> */}
-              {/* <Icon icon="logos:openai" /> */}
             </div>
           </div>
           <div className="flex items-center">

@@ -59,9 +59,11 @@ const Sidebar = () => {
   ]
 
   return (
-    <aside className="w-64 min-h-screen overflow-y-auto text-white bg-gray-800">
-      <div className="flex flex-col gap-3 p-4">
-        <h2 className="text-xl font-bold">Finanzas simples:</h2>
+    <aside className="w-92 min-h-screen overflow-y-auto text-gray-800 bg-white border-r border-gray-200">
+      <div className="flex flex-col gap-6 p-4">
+        <Link href="/" className="flex items-center justify-center py-4">
+          <img src="/logo.png" alt="Logo" className="w-auto h-10" />
+        </Link>
         <Button
           variant="solid"
           onClick={handleNewProcess}
@@ -78,7 +80,8 @@ const Sidebar = () => {
           onSelectionChange={(keys) => setFilter({ anchorKey: Array.from(keys)[0] })}
           aria-labelledby="status"
           classNames={{
-            value: '!text-white',
+            value: 'text-gray-800',
+            trigger: 'bg-white border-gray-300',
           }}
         >
           {statusArray.map((status) => (
@@ -97,7 +100,7 @@ const Sidebar = () => {
               <Link
                 href={`/process/${process.id}`}
                 key={process.id}
-                className="p-2 transition-colors rounded-lg hover:bg-primary/20 group"
+                className="p-2 transition-colors rounded-lg hover:bg-gray-100 group"
               >
                 <div className="flex items-center gap-1 mb-1">
                   <Icon
@@ -108,7 +111,7 @@ const Sidebar = () => {
                   />
                   <h3 className="font-semibold">{process.name}</h3>
                 </div>
-                <div className="flex justify-between text-sm text-gray-400">
+                <div className="flex justify-between text-sm text-gray-600">
                   <p>Transacciones</p>
                   {process.candidates_count > 0 && (
                     <p className="flex items-center gap-1">
