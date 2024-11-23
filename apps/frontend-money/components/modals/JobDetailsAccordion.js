@@ -33,7 +33,7 @@ const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center justify-between p-4 transition-colors cursor-pointer bg-gray-20 hover:bg-gray-100"
       >
-        <h3 className="mr-2 font-semibold">Detalles del Cargo</h3>
+        <h3 className="mr-2 font-semibold">Recomendaciones o Consideraciones</h3>
         {isExpanded ? (
           <FiChevronUp className="w-5 h-5 text-gray-600" />
         ) : (
@@ -46,6 +46,7 @@ const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
           isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
         } overflow-hidden`}
       >
+        {/* @TODO: Refactorizar para que sea un solo componente que te muestre si tienes o no tienes fuga de dinero */}
         <div className="p-4 bg-white">
           <div className="mb-6">
             <h4 className="mb-2 font-semibold text-gray-700 text-md">Funciones del Cargo</h4>

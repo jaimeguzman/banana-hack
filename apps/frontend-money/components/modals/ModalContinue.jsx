@@ -16,7 +16,7 @@ const ModalContinue = ({ visible, setVisible }) => {
             <ModalBody className={styles.modal.body}>
               <p>
                 Te invitamos a explorar nuestras opciones para seguir disfrutando de{' '}
-                <b className="text-primary">Gemma</b>.
+                <b className="text-primary">Kairos</b>.
               </p>
               <hr />
               <small>

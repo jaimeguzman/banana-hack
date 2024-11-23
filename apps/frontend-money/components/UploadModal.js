@@ -164,7 +164,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, jobDescription, reloadCandidat
           </div>
         )}
 
-        <h2 className="text-xl font-bold mb-4">Subir CV y Comparar con Descripción de Trabajo</h2>
+        <h2 className="text-xl font-bold mb-4">Subir Estado de Cuenta Tarjeta de Crédito</h2>
         <div {...getRootProps()} className="border-2 border-dashed border-gray-300 p-8 mb-4 cursor-pointer h-48 flex items-center justify-center">
           <input {...getInputProps()} />
           <p className="text-center">Arrastra y suelta archivos PDF aquí, o haz clic para seleccionar archivos</p>
@@ -225,7 +225,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, jobDescription, reloadCandidat
             }`}
             disabled={isLoading} // Deshabilitamos durante la carga
           >
-            {isLoading ? 'Procesando...' : 'Subir y Comparar'}
+            {isLoading ? 'Procesando...' : 'Subir y Procesar'}
           </button>
         </div>
       </div>

@@ -37,14 +37,8 @@ const ProcessHeader = ({ reloadCandidates }) => {
           // Redirigir a la página de edición usando el ID del proceso actual
           router.push(`/process/edit/${process.id}`)
           return
-        case 'pause':
-          updatedProcess = await updateProcess(process.id, { status: 'Pausado' })
-          break
         case 'finish':
           updatedProcess = await updateProcess(process.id, { status: 'Finalizado' })
-          break
-        case 'reactivate':
-          updatedProcess = await updateProcess(process.id, { status: 'Activo' })
           break
         case 'delete':
           setShowDeleteModal(true)
