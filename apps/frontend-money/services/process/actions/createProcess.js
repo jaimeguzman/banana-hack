@@ -37,18 +37,22 @@ export const createProcess = async (processData) => {
     console.log('Datos recibidos en createProcess:', processData);
 
     const { requiredSkills, optionalSkills, jobFunctions, jobRequirements, ...rest } = processData;
-    
+
     // Validar que las habilidades sean arrays
     const validRequiredSkills = Array.isArray(requiredSkills) ? requiredSkills : [];
     const validOptionalSkills = Array.isArray(optionalSkills) ? optionalSkills : [];
-    
+
+    const userSession = localStorage.getItem('userSession');
+    const user = JSON.parse(userSession);
+
     // 1. Crear el proceso base
     const { data: process, error } = await supabase
       .from('processes')
       .insert({
         ...rest,
         job_functions: jobFunctions,
-        job_requirements: jobRequirements
+        job_requirements: jobRequirements,
+        user_id: user.username
       })
       .select()
       .single();
@@ -76,14 +80,14 @@ export const createProcess = async (processData) => {
  */
 const processSkills = async (processId, requiredSkills, optionalSkills) => {
   const allSkills = [...requiredSkills, ...optionalSkills];
-  
+
   if (allSkills.length === 0) return;
 
   // Crear las habilidades
   const { data: skills, error: skillsError } = await supabase
     .from('skills')
-    .insert(allSkills.map(skill => ({ 
-      name: skill.label || skill.name 
+    .insert(allSkills.map(skill => ({
+      name: skill.label || skill.name
     })))
     .select();
 

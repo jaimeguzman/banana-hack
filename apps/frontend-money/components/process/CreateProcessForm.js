@@ -138,8 +138,6 @@ const CreateProcessForm = () => {
   /**
    * Maneja los cambios en el multi-select de habilidades
    * @function handleSkillsChange
-   * @param {Array<{value: string, label: string}>} selectedOptions - Opciones seleccionadas
-   * @param {string} skillType - Tipo de habilidad ('mandatorySkills' o 'optionalSkills')
    */
   const handleSkillsChange = (selectedOptions, skillType) => {
     setFormData(prevData => ({
