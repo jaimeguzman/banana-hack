@@ -202,10 +202,12 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
                 }
             else:
                 cv_info = extract_bank_document(content)
-                match_result = await calculate_match_score(
-                    cv_info["experiencia"], 
-                    job_description
-                )
+
+                # 
+                # match_result = await calculate_match_score(
+                #     cv_info["experiencia"], 
+                #     job_description
+                # )
 
 
             # Subir a S3 si no está en modo debug
@@ -217,15 +219,16 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
 
             # Insertar datos en Supabase
             # Se debe REFACTOR 
-            insert_candidate_to_supabase(cv_info, match_result, process_id)
+            # APENAS ESTE OK EL JSON SE DEBE INSERTAR EN LA BASE DE DATOS
+            # insert_candidate_to_supabase(cv_info, match_result, process_id)
 
 
             results.append({
                 "filename": file.filename,
                 "size": len(content),
-                "cv_info": cv_info,
-                "ai_score": match_result["match_score"],
-                "match_feedback": match_result["explanation"] # ,  "s3_url": s3_url
+                "cv_info": cv_info
+                # "ai_score": match_result["match_score"],
+                # "match_feedback": match_result["explanation"] # ,  "s3_url": s3_url
             })
 
         return JSONResponse(content={"processed_files": results})

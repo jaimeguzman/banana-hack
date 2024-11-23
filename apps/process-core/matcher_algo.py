@@ -6,6 +6,7 @@ from fastapi import HTTPException
 # Configuración de OpenAI
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# @REFACTOR: para que acá haga la recomendación financiera
 async def calculate_match_score(resume: str, job_description: str) -> dict:
  
     print(f"\n calculate_match_score resume : {resume}")

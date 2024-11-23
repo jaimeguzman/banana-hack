@@ -34,18 +34,7 @@ Returns:
 dict: Diccionario con la información extraída del CV.
 """
 def extract_bank_document(file_content: bytes) -> dict:
-    """
-    Extrae información estructurada de un CV usando OpenAI.
-
-    Args:
-        file_content (bytes): Contenido del archivo PDF en bytes.
-
-    Returns:
-        dict: Información estructurada del CV incluyendo datos personales y experiencia.
-
-    Raises:
-        HTTPException: Si hay errores en la extracción o procesamiento del PDF.
-    """
+ 
     try:
         # Extraer texto del PDF
         pdf_reader = PyPDF2.PdfReader(io.BytesIO(file_content))
@@ -54,26 +43,54 @@ def extract_bank_document(file_content: bytes) -> dict:
         print("\n" + "="*50)
         print("TEXTO EXTRAÍDO DEL PDF:")
         print("-"*50)
-        print(text[:500] + "...")  # Primeros 500 caracteres
+        print(text[:1000] + "...")  # Primeros 500 caracteres
         print("="*50 + "\n")
 
         # Prompt para OpenAI
         system_prompt = """
-        Eres un experto en análisis de CVs. Extrae la siguiente información del CV proporcionado:
-        1. Nombre completo de la persona
-        2. Email
-        3. Número de teléfono (con código de país si está disponible)
-        4. URL de LinkedIn o username
-        5. Resumen de las últimas 3 experiencias profesionales (máximo 100 palabras por experiencia)
+            eres experto analizando finanzas.
+            vas a extraer desde un pdf, un estado de cuenta de la tarjeta de credito.
 
-        Responde en formato JSON con las siguientes keys:
-        {
-            "name": "nombre completo",
-            "email": "email@ejemplo.com",
-            "phone": "+56912345678",
-            "linkedin_url": "https://www.linkedin.com/in/username",
-            "experience": "resumen de experiencias"
-        }
+            necesito que analices todos los movimientos asociados a una transacción.
+            vas a extraer 3 campos. fechas, el nombre de la transaccion (descripcion) y el monto de la transaccion (cargos).
+
+            luego, vas a clasificar las descripciones en categorias como titulo principal y vas a sumar todos los movimientos asociados. 
+
+            por ejemplo, si en el archivo encuentras: shell, copec, petrobras, aramco o similares, tendras que crear la categoria "combustible" y sumar todos los montos de las bencineras. 
+
+            otro ejemplo, si aparece uber, cabify, didi o similares, tendrás que crear la categoria "movilidad" y sumar todas las transacciones asociadas. 
+
+            y así con todas las categorias que encuentres. las más comunes son: supermercados, restaurantes, movilidad, combustible, entretenimiento, salud. considera otras relevantes.
+
+            Responde en formato JSON con las siguientes keys:
+            {
+            "json1": {
+                "id": 1,
+                "nombre": "JSON 1",
+                "datos": {
+                "prop1": "valor1",
+                "prop2": "valor2"
+                }
+            },
+            "json2": {
+                "id": 2,
+                "nombre": "JSON 2",
+                "datos": {
+                "prop1": "valorA",
+                "prop2": "valorB"
+                }
+            },
+            "json3": {
+                "id": 3,
+                "nombre": "JSON 3",
+                "datos": {
+                "prop1": "valorX",
+                "prop2": "valorY"
+                }
+            }
+            }
+            donde json1 es para identificar toda la información de cliente, json información del producto como : fecha_estado_cuenta, pagar_hasta, total_facturado, minimo_pagar, cupo total, cupo utilizado, cupo disponible, tasas interes_vigente rotativo, tasas interes_vigente compra_en_cuotas,tasas interes_vigente  avance_en_cuotas, cae rotativo, cae compra en cuotas. json 3 serán todos los movimientos asociados a cada categoría.
+
         """
 
         # Llamada a OpenAI
@@ -91,47 +108,35 @@ def extract_bank_document(file_content: bytes) -> dict:
         print("\n" + "="*50)
         print("RESPUESTA CRUDA DE OPENAI:")
         print("-"*50)
-        print(response.choices[0].message.content)
+        # print(response.choices[0].message.content)
         print("="*50 + "\n")
 
         # Procesar respuesta
-        cv_data = eval(response.choices[0].message.content)
+        tc_data = eval(response.choices[0].message.content)
 
-        # Debug de cv_data
+        # Debug de tc_data
         print("\n" + "="*50)
-        print("DATOS EXTRAÍDOS (cv_data):")
+        print("DATOS EXTRAÍDOS (BANK DOCUMENT):")
         print("-"*50)
-        for key, value in cv_data.items():
+        for key, value in tc_data.items():
             print(f"{key}: {value}")
         print("="*50 + "\n")
 
-        # Procesar URL de LinkedIn
-        linkedin_url = cv_data.get('linkedin_url', '')
-        if linkedin_url and not linkedin_url.startswith('http'):
-            linkedin_url = f"https://www.linkedin.com/in/{linkedin_url}"
+
 
         # Validar y limpiar teléfono
-        phone = cv_data.get('phone', '')
+        phone = tc_data.get('phone', '')
         if phone and not phone.startswith('+'):
             phone = f"+{phone}"
 
-        # Procesar experiencia
-        experience = cv_data.get('experience', {})
-        if isinstance(experience, dict):
-            experience_text = "\n\n".join([
-                f"{key}: {value}" 
-                for key, value in experience.items()
-            ])
-        else:
-            experience_text = str(experience)
+ 
 
         # Crear diccionario final
         result = {
-            "nombre": cv_data.get('name', 'No encontrado'),
-            "email": cv_data.get('email', 'No encontrado'),
-            "telefono": phone or 'No encontrado',
-            "linkedin_url": linkedin_url or 'No encontrado',
-            "experiencia": experience_text or 'No encontrado',
+            "nombre_banco": tc_data.get('bank_name', 'No encontrado'),
+            "numero_cuenta": tc_data.get('account_number', 'No encontrado'),
+            "titular": tc_data.get('account_holder', 'No encontrado'),
+            "tipo_cuenta": tc_data.get('account_type', 'No encontrado'),
             "texto_completo": text
         }
 
@@ -225,3 +230,4 @@ def insert_candidate_to_supabase(cv_info: dict, match_result: dict, process_id: 
             status_code=500,
             detail=f"Error al insertar candidato: {str(e)}"
         )
+ 
