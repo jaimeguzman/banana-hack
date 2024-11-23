@@ -190,7 +190,7 @@ async def upload_files(
 
             content = await file.read()
 
-            client, product = extract_bank_document(content)
+            client, product, movements = extract_bank_document(content)
 
             # @ TODO: Acá iría la recomendacion de AI
             # match_result = await calculate_match_score(
@@ -206,7 +206,7 @@ async def upload_files(
             # @TODO: cada vez que se inserta debería guardarse la url del objeto PDF de s3
 
             insert_candidate_to_supabase(
-                process_id, user_id=user_id, client=client, product=product
+                process_id, user_id=user_id, client=client, product=product, movements=movements
             )
 
             results.append(

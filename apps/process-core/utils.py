@@ -12,6 +12,7 @@ from supabase import Client, create_client
 
 from matcher_algo import calculate_match_score
 from prompts.extract_client import extract_client
+from prompts.extract_movements import extract_movements
 from prompts.extract_product import extract_product
 
 # Cargar las variables desde el archivo .env
@@ -96,68 +97,11 @@ def extract_bank_document(file_content: bytes) -> dict:
 
         """
 
-        # Llamada a OpenAI
-        """ response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text}
-            ],
-            temperature=0.3,
-            max_tokens=800
-        )
-
-        # Imprimir respuesta cruda de OpenAI
-        print("\n" + "="*50)
-        print("RESPUESTA CRUDA DE OPENAI:")
-        print("-"*50)
-        # print(response.choices[0].message.content)
-        print("="*50 + "\n")
-
-        # Procesar respuesta
-        tc_data = eval(response.choices[0].message.content)
-
-        # Debug de tc_data
-        print("\n" + "="*50)
-        print("DATOS EXTRAÍDOS (BANK DOCUMENT):")
-        print("-"*50)
-        for key, value in tc_data.items():
-            print(f"{key}: {value}")
-        print("="*50 + "\n")
-
-
-
-        # Validar y limpiar teléfono
-        phone = tc_data.get('phone', '')
-        if phone and not phone.startswith('+'):
-            phone = f"+{phone}"
-
- 
-
-        # Crear diccionario final
-        result = {
-            "nombre_banco": tc_data.get('bank_name', 'No encontrado'),
-            "numero_cuenta": tc_data.get('account_number', 'No encontrado'),
-            "titular": tc_data.get('account_holder', 'No encontrado'),
-            "tipo_cuenta": tc_data.get('account_type', 'No encontrado'),
-            "texto_completo": text
-        }
-
-        # Debug del resultado final
-        print("\n" + "="*50)
-        print("RESULTADO FINAL PROCESADO:")
-        print("-"*50)
-        for key, value in result.items():
-            if key == "texto_completo":
-                print(f"{key}: [TEXTO COMPLETO OMITIDO]")
-            else:
-                print(f"{key}: {value}")
-        print("="*50 + "\n") """
-
         client = extract_client(text)
         product = extract_product(text)
+        movements = extract_movements(text)
 
-        return client, product
+        return client, product, movements
 
     except Exception as e:
         print("\n" + "=" * 50)
@@ -195,7 +139,9 @@ def validate_phone_number(phone: str) -> str:
     return f"+{numbers}"
 
 
-def insert_candidate_to_supabase(process_id: str,user_id: str, client: dict, product: dict) -> None:
+def insert_candidate_to_supabase(
+    process_id: str, user_id: str, client: dict, product: dict, movements: dict
+) -> None:
     """
     Inserta la información del candidato en la base de datos de Supabase.
 
@@ -214,6 +160,7 @@ def insert_candidate_to_supabase(process_id: str,user_id: str, client: dict, pro
             "status": "Postulado",
             "client": client,
             "product": product,
+            "movements": movements,
         }
 
         # Log para debugging
