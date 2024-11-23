@@ -1,0 +1,43 @@
+name: Deploy Lambda Process Core
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'apps/process-core/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+          
+      - name: Install AWS CLI
+        run: |
+          pip install awscli
+          
+      - name: Install Python dependencies in the target directory
+        run: |
+          cd apps/process-core
+          pip install -r requirements.txt -t .
+      
+      - name: Zip entire project for Lambda
+        run: |
+          cd apps/process-core
+          zip -r ../../process-core.zip .
+          cd ../../
+          
+      - name: Deploy to AWS Lambda
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+          AWS_REGION: 'us-west-2'
+        run: |
+          aws lambda update-function-code --function-name api-process-core --zip-file fileb://process-core.zip --region us-west-2
