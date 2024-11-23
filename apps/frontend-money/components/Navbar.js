@@ -20,7 +20,7 @@ export default function Navbar() {
               <img src="/logo.png" alt="Logo" className="w-auto h-8 mr-2" />
             </Link>
             <div className="flex items-center gap-3 -mt-[14px] text-[30px]">
-              <h1 className="font-bold text-primary">ATS</h1>
+              {/* <h4 className="font-bold text-primary">Mejora tu Salud Financiera</h4> */}
               {/* <Icon icon="logos:openai" /> */}
             </div>
           </div>
