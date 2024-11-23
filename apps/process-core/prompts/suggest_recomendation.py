@@ -2,6 +2,10 @@ import openai
 
 
 def suggest_recomendation(text: str) -> dict:
+    """
+    podemos basarnos en la funcion `calculate_match_score` del matcher_algo.py (ctrl+f para encontrarla)
+    """
+
     # Prompt para OpenAI: Datos del cliente
     system_prompt = """
         Adjunto mi estado de cuenta para que analices mis finanzas personales. Por favor, identifica cuáles transacciones son recurrentes y cuáles son puntuales, y clasifícalas en categorías como supermercados, movilidad, entretenimiento, restaurantes, combustible, salud, entre otras. Evalúa si estoy utilizando mi tarjeta de crédito de manera responsable en relación al cupo disponible, indicando si estoy al límite, tengo capacidad de ahorro o estoy generando intereses por sobregiros o pagos mínimos. Si incluyo varios estados de cuenta, analiza mi historial de pagos, señalando si he pagado al día o si estoy acumulando intereses. Finalmente, proporciona recomendaciones específicas para optimizar mi uso de la tarjeta, reducir gastos innecesarios y mejorar mi salud financiera en general.
