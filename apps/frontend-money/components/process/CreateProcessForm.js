@@ -6,6 +6,8 @@ import { createSkill } from '../../services/skills';
 import { createProcess } from '../../services/process';
 import { deleteProcess } from '../../services/process';
 import { createOrGetSkill } from '../../services/skills/actions/createOrGetSkill';
+import { fetchBanks } from '../../services/banks/queries';
+import { Select, SelectItem } from '@nextui-org/react';
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,6 +21,36 @@ const CreatableAsyncSelect = dynamic(
 
 // Importación dinámica de ReactQuill para evitar problemas con SSR
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+
+/**
+ * Select de bancos simplificado
+ * @param {Object} props
+ * @param {Array} props.banks - Lista de bancos desde Supabase
+ * @param {Function} props.onChange - Función para manejar cambios
+ * @param {string} props.value - Valor seleccionado
+ */
+const BankSelect = ({ banks, onChange, value }) => (
+  <div className="form-group">
+    <label htmlFor="bank" className="block text-gray-700 text-sm font-bold mb-2">
+      Selecciona un banco
+    </label>
+    <select
+      id="bank"
+      name="name"
+      value={value}
+      onChange={onChange}
+      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+      required
+    >
+      <option value="" disabled>Selecciona un banco</option>
+      {banks.map((bank) => (
+        <option key={bank.id} value={bank.name}>
+          {bank.name} - {bank.tipo}
+        </option>
+      ))}
+    </select>
+  </div>
+);
 
 /**
  * Componente para crear un nuevo proceso de kairo
@@ -47,10 +79,12 @@ const CreateProcessForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [skillOptions, setSkillOptions] = useState([]);
+  const [banks, setBanks] = useState([]);
 
   useEffect(() => {
     setIsClient(true);
     loadInitialSkills();
+    loadBanks();
   }, []);
 
   const loadInitialSkills = async () => {
@@ -59,6 +93,16 @@ const CreateProcessForm = () => {
       setSkillOptions(skills);
     } catch (error) {
       console.error('Error al cargar habilidades iniciales:', error);
+    }
+  };
+
+  // SI 
+  const loadBanks = async () => {
+    try {
+      const banksData = await fetchBanks();
+      setBanks(banksData);
+    } catch (error) {
+      console.error('Error loading banks:', error);
     }
   };
 
@@ -72,15 +116,7 @@ const CreateProcessForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  /**
-   * Maneja los cambios en el editor WYSIWYG
-   * @function handleEditorChange
-   * @param {string} value - Contenido del editor
-   * @param {string} field - Campo a actualizar
-   */
-  const handleEditorChange = (value, field) => {
-    setFormData({ ...formData, [field]: value });
-  };
+ 
 
   /**
    * Maneja los cambios en el multi-select de habilidades
@@ -131,9 +167,6 @@ const CreateProcessForm = () => {
 
   /**
    * Carga las opciones de habilidades
-   * @function loadOptions
-   * @param {string} inputValue - Valor ingresado por el usuario
-   * @returns {Promise<Array<{value: string, label: string}>>} Opciones filtradas
    */
   const loadOptions = useCallback(async (inputValue) => {
     if (inputValue.length < 2) return [];
@@ -143,12 +176,7 @@ const CreateProcessForm = () => {
     return filteredOptions;
   }, [skillOptions]);
 
-  /**
-   * Maneja la creación de una nueva habilidad
-   * @function handleCreateSkill
-   * @param {string} inputValue - Valor ingresado por el usuario
-   * @returns {Promise<Object|null>} Nueva opción de habilidad o null si hay un error
-   */
+ 
   const handleCreateSkill = async (inputValue) => {
     try {
       const skill = await createOrGetSkill(inputValue);
@@ -187,61 +215,33 @@ const CreateProcessForm = () => {
       <p className="font-semibold">Especifica los detalles del proceso de kairo</p>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4 mb-4">
-          <input
-            color="primary"
-            variant="bordered"
-            type="text"
-            name="name"
-            placeholder="Nombre del proceso"
+
+
+
+          <BankSelect 
+            banks={banks}
             value={formData.name}
             onChange={handleInputChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            color="primary"
-            variant="bordered"
-            type="text"
-            name="position"
-            placeholder="Posición"
-            value={formData.position}
-            onChange={handleInputChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            color="primary"
-            variant="bordered"
-            type="text"
-            name="area"
-            placeholder="Área"
-            value={formData.area}
-            onChange={handleInputChange}
-            className="border p-2 rounded"
-            required
           />
           <select            
             color="primary"
             variant="bordered"
-            name="modality"
-            value={formData.modality}
-            onChange={handleInputChange}
+            name="typeProduct"
             className="border p-2 rounded"
+            placeholder="Seleccion Producto"
+            defaultValue=""
             required
           >
-            <option value="Presencial">Presencial</option>
-            <option value="Remoto">Remoto</option>
-            <option value="Híbrido">Híbrido</option>
+            <option value="" disabled>Seleccion Producto</option>
+            <option value="CreditCard">Tarjeta de Credito</option>
+            <option value="DebitCard" disabled>Tarjeta de Debito</option>
+            <option value="WalletCard" disabled>Billetera Virtual</option>
           </select>
-          <input
-            type="text"
-            name="requested_by"
-            placeholder="Solicitado por"
-            value={formData.requested_by}
-            onChange={handleInputChange}
-            className="border p-2 rounded"
-            required
-          />
+
+
+ 
+ 
+ 
         </div>
         <div className="col-span-3 grid grid-cols-2 gap-4 mb-6"> {/* Aumentar margen inferior */}
         <p className="col-span-12 font-semibold">Indíca la duración del proceso de kairo</p>
@@ -307,73 +307,12 @@ const CreateProcessForm = () => {
               />
             )}
           </div>
-          {/* <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="optionalSkills">
-              Habilidades opcionales
-            </label>
-            {isClient && (
-              <CreatableAsyncSelect
-                isMulti
-                cacheOptions
-                defaultOptions={skillOptions}
-                loadOptions={loadOptions}
-                onCreateOption={async (inputValue) => {
-                  const newOption = await handleCreateSkill(inputValue);
-                  if (newOption) {
-                    handleSkillsChange([...formData.optionalSkills, newOption], 'optionalSkills');
-                  }
-                }}
-                onChange={(selectedOptions) => handleSkillsChange(selectedOptions, 'optionalSkills')}
-                placeholder="Selecciona o escribe para agregar..."
-                formatCreateLabel={(inputValue) => `Crear "${inputValue}"`}
-                noOptionsMessage={() => 'No hay opciones'}
-                loadingMessage={() => 'Cargando...'}
-              />
-            )}
-          </div> */}
+
         </div>
 
-        {/* <div className="mb-4 mt-4">
-          <label htmlFor="jobFunctions" className="block text-gray-700 text-sm font-bold mb-2">
-            Funciones del Cargo
-          </label>
-          <ReactQuill
-            value={formData.jobFunctions}
-            onChange={(value) => handleEditorChange(value, 'jobFunctions')} 
-            className="border p-2 rounded w-full"
-            placeholder="Describa las funciones del cargo"
-            style={{ height: '200px', marginBottom: '50px' }}
-            modules={{
-              toolbar: [
-                [{ 'header': [1, 2, false] }],
-                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                [{'list': 'ordered'}, {'list': 'bullet'}],
-                ['clean']
-              ]
-            }}
-          />
-        </div> */}
+ 
 
-        {/* <div className="mb-4">
-          <label htmlFor="jobRequirements" className="block text-gray-700 text-sm font-bold mb-2">
-            Requerimientos del Cargo
-          </label>
-          <ReactQuill
-            value={formData.jobRequirements}
-            onChange={(value) => handleEditorChange(value, 'jobRequirements')}
-            className="border p-2 rounded w-full"
-            placeholder="Describa los requerimientos del cargo"
-            style={{ height: '200px', marginBottom: '50px' }}
-            modules={{
-              toolbar: [
-                [{ 'header': [1, 2, false] }],
-                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                [{'list': 'ordered'}, {'list': 'bullet'}],
-                ['clean']
-              ]
-            }}
-          />
-        </div> */}
+     
 
         <div className="flex justify-end mt-6">
           <button
