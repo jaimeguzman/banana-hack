@@ -9,7 +9,7 @@ const AuthLayout = ({ children }) => {
             Facilitamos entender tus finanzas, priorizando tu salud financiera.
           </h2>
           <p className="text-2xl">
-            Finance Peace es una herramienta simple que deja lo manual a la tecnología y lo esencial a tu salud financiera.
+            Kairo es una herramienta simple que deja lo manual a la tecnología y lo esencial a tu salud financiera.
           </p>
         </div>
       </div>
