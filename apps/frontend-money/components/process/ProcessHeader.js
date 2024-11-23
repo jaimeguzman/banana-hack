@@ -13,6 +13,7 @@ import JobDetailsAccordion from '../modals/JobDetailsAccordion'
 import Button from '../ui/Button'
 import { Icon } from '@iconify/react'
 import { Chip } from '@nextui-org/react'
+import Link from 'next/link'
 
 /**
  * Componente que muestra la cabecera de un proceso de reclutamiento.
@@ -91,11 +92,19 @@ const ProcessHeader = ({ reloadCandidates }) => {
       <div className="flex flex-col gap-3 p-4 mb-4 bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Icon icon="carbon:document-processor" className="text-2xl text-success-500" />
-            <h1 className="text-2xl font-bold text-dark-blue">{process.name}</h1>
-            <Chip classNames={{ content: 'text-white' }} color="success">
-              {process.status}
-            </Chip>
+            <Link 
+              href="/" 
+              className="flex items-center text-primary hover:text-primary/80 transition-colors"
+            >
+              <Icon icon="ph:caret-left-bold" className="text-2xl" />
+            </Link>
+            <div className="flex items-center gap-2">
+              <Icon icon="carbon:document-processor" className="text-2xl text-success-500" />
+              <h1 className="text-2xl font-bold text-dark-blue">{process.name}</h1>
+              <Chip classNames={{ content: 'text-white' }} color="success">
+                {process.status}
+              </Chip>
+            </div>
           </div>
           <div className="flex items-center gap-1">
             <Button

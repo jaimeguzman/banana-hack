@@ -71,11 +71,11 @@ export default function ProcessContent() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <Link href="/" className="text-blue-500 hover:text-blue-600">
             ← Volver al inicio
           </Link>
-        </div>
+        </div> */}
         <ProcessHeader reloadCandidates={reloadCandidates} />
         <CandidateTable />
       </main>
