@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from typing import List, Optional
 from supabase import create_client, Client
-from utils import extract_cv_info, calculate_match_score, insert_candidate_to_supabase
+from utils import extract_bank_document, calculate_match_score, insert_candidate_to_supabase
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from typing import Optional
@@ -189,7 +189,7 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
             if os.getenv("DEBUG_EXTRACT_INFO_PDF", "false").lower() == "true":
                 # Valores de prueba cuando debug está activado
                 cv_info = {
-                    "nombre": "Usuario Prueba",
+                    "nombre": "Cartola de Prueba",
                     "email": "user@example.com",
                     "telefono": "+56 9 1234 5678",
                     "experiencia": "Experiencia de prueba en varias emrpesass",
@@ -201,7 +201,7 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
                     "explanation": "mode debug"
                 }
             else:
-                cv_info = extract_cv_info(content)
+                cv_info = extract_bank_document(content)
                 match_result = await calculate_match_score(
                     cv_info["experiencia"], 
                     job_description

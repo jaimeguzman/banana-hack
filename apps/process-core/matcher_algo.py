@@ -7,17 +7,7 @@ from fastapi import HTTPException
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 async def calculate_match_score(resume: str, job_description: str) -> dict:
-    """
-    Calcula la puntuación de coincidencia entre un CV y una descripción de trabajo.
-
-    Args:
-        resume (str): Texto del CV.
-        job_description (str): Texto de la descripción del trabajo.
-
-    Returns:
-        dict: Diccionario con la puntuación y explicación.
-    """
-
+ 
     print(f"\n calculate_match_score resume : {resume}")
     print("::::::::::::::::::::::::::::::::::::::::::::::")
     print(f"\n calculate_match_score job_description : {job_description}")

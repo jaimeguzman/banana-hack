@@ -9,3 +9,8 @@
 - Agregar logs
 - Agregar validaciones
 
+
+
+Existe tipos de movimientos 
+- nacionales 
+- internacionales

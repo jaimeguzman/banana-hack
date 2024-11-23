@@ -33,7 +33,7 @@ file_content (bytes): Contenido del archivo PDF en bytes.
 Returns:
 dict: Diccionario con la información extraída del CV.
 """
-def extract_cv_info(file_content: bytes) -> dict:
+def extract_bank_document(file_content: bytes) -> dict:
     """
     Extrae información estructurada de un CV usando OpenAI.
 
