@@ -18,8 +18,8 @@ app = FastAPI(title="Lambda Function API", version="1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000",
-                   "https://demo.soygemma.com",
-                   "https://meecmjgrydr3sann2rn6nniseq0malss.lambda-url.us-west-2.on.aws"],
+                   "https://develop.dxgbdvng7cbh1.amplifyapp.com",
+                   "https://develop.dxgbdvng7cbh1.amplifyapp.com/login" ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,7 +32,7 @@ app.include_router(upload_router)
 @app.get("/")
 async def root():
     """Endpoint de prueba para verificar el funcionamiento del servidor."""
-    return {"message": "Hello, Gemma"}
+    return {"message": "Hello Kairo"}
 
 # Adaptador para AWS Lambda
 handler = Mangum(app, lifespan="off")

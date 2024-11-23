@@ -216,6 +216,7 @@ async def upload_files(files: List[UploadFile] = File(...), process_id: str = Fo
             # @TODO: cada vez que se inserta debería guardarse la url del objeto PDF de s3
 
             # Insertar datos en Supabase
+            # Se debe REFACTOR 
             insert_candidate_to_supabase(cv_info, match_result, process_id)
 
 
