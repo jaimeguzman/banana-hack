@@ -109,11 +109,12 @@ const Sidebar = () => {
                   <h3 className="font-semibold">{process.name}</h3>
                 </div>
                 <div className="flex justify-between text-sm text-gray-400">
-                  <p>{process.modality}</p>
+                  <p>Transacciones</p>
                   {process.candidates_count > 0 && (
                     <p className="flex items-center gap-1">
                       {process.candidates_count}
-                      <Icon icon="ic:twotone-group" className="text-lg group-hover:text-success" />
+                      {/* icon="ic:outline-library-books" */}
+                      <Icon icon="ic:outline-account-balance" className="text-lg group-hover:text-success" />
                     </p>
                   )}
                 </div>
