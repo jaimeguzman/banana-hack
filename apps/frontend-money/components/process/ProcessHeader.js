@@ -81,6 +81,8 @@ const ProcessHeader = ({ reloadCandidates }) => {
   }, [process?.id])
 
   // Calculamos totales y obtenemos las fechas
+  // @TODO - Acá debe ir la logica para calcular los totales, pero 
+  // se debe dejar un calculo que permita ir por movimiento y no por todos.
   const { totals, fechas } = productsInfo.reduce((acc, curr) => {
     const product = curr.product || {}
     return {
@@ -201,8 +203,8 @@ const ProcessHeader = ({ reloadCandidates }) => {
         <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
-              <p className="text-lg inline">{fechas.estado || ''} - {fechas.pago || ''}</p>
+              <h2 className=" inline">Inicio de facturación: </h2>
+              <p className="text-lg inline">{fechas.estado || ''} - Fecha de pago: {fechas.pago || ''}</p>
             </div>
             <div className="text-right">
               <p className="text-gray-500">Disponible Total</p>
