@@ -1,7 +1,7 @@
 // @TODO dejar el process header de guiller pero revisar con la rama de integracion, muchos cambios.
 
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import UploadModal from '../UploadModal'
 // import { updateProcess } from '../../services/processService';
@@ -14,6 +14,8 @@ import Button from '../ui/Button'
 import { Icon } from '@iconify/react'
 import { Chip } from '@nextui-org/react'
 import Link from 'next/link'
+import { fetchProductInfo } from '../../services/banks/queries';
+
 
 /**
  * Componente que muestra la cabecera de un proceso de reclutamiento.
@@ -28,6 +30,10 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const { process, setProcess } = useProcess()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+
+
 
   const handleOption = async (option) => {
     try {
@@ -124,9 +130,11 @@ const ProcessHeader = ({ reloadCandidates }) => {
             </Button>
           </div>
         </div>
+        {/*  */
         
+        }
 
-        <div className="bg-white rounded-lg p-6 mb-6">
+        <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
@@ -147,7 +155,8 @@ const ProcessHeader = ({ reloadCandidates }) => {
               </div>
               <div className="text-right">
                 <p className="text-gray-500">Cupo total</p>
-                <p className="text-xl font-semibold">$5.930.000</p>
+                <p className="text-xl font-semibold"> XXXXX </p>
+
               </div>
             </div>
             
@@ -192,9 +201,9 @@ const ProcessHeader = ({ reloadCandidates }) => {
         <JobDetailsAccordion
           process={process}
         />
-        <div className="flex flex-col gap-1">
-          <h3 className="mr-1 font-semibold">Categorías</h3>
-          <div className="flex flex-wrap gap-1">
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold">Categorías:</h3>
+          <div className="flex flex-wrap items-center gap-1">
             {process.requiredSkills && process.requiredSkills.length > 0 ? (
               process.requiredSkills.map((skill) => (
                 <Chip key={skill.value} color="primary" variant="dot">
