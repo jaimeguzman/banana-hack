@@ -251,30 +251,6 @@ const ProcessHeader = ({ reloadCandidates }) => {
     }
   ]
 
-  const groups = [
-    {
-      icon: '🏡',
-      percentaje: 26,
-      amount: 151_466,
-      title: 'Escenciales',
-      description: 'Necesidades básicas, salud, seguros',
-    },
-    {
-      icon: '🍿',
-      percentaje: 67.5,
-      amount: 392_604,
-      title: 'Ocio',
-      description: 'Restaurantes, entretenimiento, viajes',
-    },
-    {
-      icon: '🪴',
-      percentaje: 6.5,
-      amount: 37_379,
-      title: 'Inversiones',
-      description: 'Servicios digitales, negocios',
-    },
-  ]
-
   return (
     <>
       {isModalOpen && (
@@ -285,7 +261,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         />
       )}
 
-      <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
+      <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg text-dark-blue">
         <div className="flex flex-row justify-between">
           <div className="flex flex-col">
             <p className='text-bold text-xl font-bold'>Estado de cuenta</p>
@@ -311,7 +287,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
             <span className="absolute inset-0 animate-ripple-3 bg-white/30"></span>
           </Button>
         </div>
-        <div className='flex flex-row p-6 gap-12 border-1 border-gray-100 rounded-md m-2'>
+        <div className='flex flex-row p-6 gap-12 border-1 border-gray-100 rounded-md my-2'>
           {alerts.map((alert, index) => (
             <div className='flex flex-col'>
               {alert.icon}
@@ -356,17 +332,6 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <p>Intereses y cobros extra</p>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-row border-1 border-gray-300 rounded-md justify-around p-4">
-          {groups.map((group) => (
-            <div className='flex flex-col'>
-              <span className="text-gray-600">{group.icon} {group.percentaje}%</span>
-              <p className='text-2xl font-bold'>{formatCurrency(group.amount)}</p>
-              <p className='text-gray-700'>{group.title}</p>
-              <p className='text-gray-700'>{group.description}</p>
-            </div>
-          ))}
         </div>
 
         {/* @TODO: Codigo para deprecar */}
