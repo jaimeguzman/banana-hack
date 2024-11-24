@@ -5,7 +5,7 @@
 
 # Gestión Simplificada de Tarjetas de Crédito
 
-¡Bienvenido/a! Este proyecto está diseñado para facilitar la gestión de tarjetas de crédito, ayudando a los usuarios a tomar decisiones financieras más inteligentes y evitar pagar únicamente intereses sin reducir sus deudas.
+¡Bienvenido/a!  Este proyecto está diseñado para facilitar la gestión de tarjetas de crédito, ayudando a los usuarios a tomar decisiones financieras más inteligentes y evitar pagar únicamente intereses sin reducir sus deudas.
 
 ---
 
@@ -41,8 +41,8 @@ La solución está diseñada con el usuario en mente y utiliza tecnologías mode
 
 ## Más información
 
-Visita nuestra [landing page](https://kairos-ai.framer.website/) para descubrir cómo este proyecto puede ayudarte a tomar el control de tus finanzas.
+Visita nuestra [landing page](https://kairos-ai.framer.website/) para descubrir cómo este proyecto puede ayudarte a tomar el control de tus finanzas. o entra directamente a nuestra [plataforma](https://develop.dxgbdvng7cbh1.amplifyapp.com/login) (Beta Cerrada 🔒)
 
 ---
 
-¡Gracias por interesarte en este proyecto! Si tienes alguna pregunta o sugerencia, no dudes en contactarnos. 🙌
+¡Gracias por interesarte en este proyecto! Si quieres apoyarnos, dale una estrellita al repo ⭐
