@@ -197,8 +197,8 @@ const CandidateTable = () => {
               <th className={styles.th}></th>
               <th className="py-2 pl-0 pr-2 text-left">Categoría</th>
               <th className="py-2 pl-0 pr-2 text-left">Monto</th>
-              <th className={styles.th}>Prefiltro AI</th>
-              <th className={styles.th}>Estado</th>
+              <th className={styles.th}>Kairos AI</th>
+              {/* <th className={styles.th}>Estado</th> */}
             </tr>
           </thead>
           <tbody>
@@ -207,11 +207,12 @@ const CandidateTable = () => {
                 {
                   label: 'Ver',
                   onClick: () => handleOptionClick('ver', candidate.id),
-                },
-                {
-                  label: 'Agendar',
-                  onClick: () => handleOptionClick('agendar', candidate.id),
-                },
+                } 
+                ,
+                // {
+                //   label: 'Agendar',
+                //   onClick: () => handleOptionClick('agendar', candidate.id),
+                // },
                 {
                   label: 'Historial',
                   onClick: () => handleOptionClick('historial', candidate.id),
@@ -237,7 +238,7 @@ const CandidateTable = () => {
                     />
                     <span className="text-xs">{candidate.aiScore}%</span>
                   </td>
-                  <td className={styles.td}>
+                  {/* <td className={styles.td}>
                     <Select
                       value={{ value: candidate.status, label: candidate.status }}
                       onChange={(selectedOption) =>
@@ -251,7 +252,7 @@ const CandidateTable = () => {
                       classNamePrefix="react-select"
                       isDisabled={process?.status === 'Finalizado'}
                     />
-                  </td>
+                  </td> */}
                 </tr>
               )
             })}
