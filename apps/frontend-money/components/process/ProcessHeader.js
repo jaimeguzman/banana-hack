@@ -273,7 +273,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           </div>
           <Button
             color="primary"
-            className="font-semibold relative overflow-hidden w-64"
+            className="font-semibold relative overflow-hidden w-96"
             onClick={() => {
               if (process.status !== 'Finalizado') {
                 setIsModalOpen(true)
