@@ -11,7 +11,7 @@ export function ProcessProvider({ children }) {
 
   // Debug effect
   useEffect(() => {
-    console.log('Candidates updated:', candidates);
+    // console.log('Candidates updated:', candidates);
   }, [candidates]);
 
   useEffect(() => {
