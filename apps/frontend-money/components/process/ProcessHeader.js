@@ -110,7 +110,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
       try {
         const productData = await fetchProductInfo(process.id)
         setProductInfo(productData)
-        
+
         console.log('🏦 Product Data:', {
           processId: process.id,
           productData,
@@ -144,6 +144,15 @@ const ProcessHeader = ({ reloadCandidates }) => {
   //   getProduct();
   // }, []);
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
+
   // Ahora puedes acceder a productInfo en cualquier parte del componente
   const cupoTotal = productInfo?.cupo_total || 0;
   const caeRotativo = productInfo?.cae_rotativo || 0;
@@ -159,13 +168,14 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const montoMinimoPagar = productInfo?.monto_minimo_pagar || 0;
   const fechaEstadoCuenta = productInfo?.fecha_estado_cuenta ? new Date(productInfo.fecha_pagar_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
     : new Date(2024, 9, 24).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-  const montoTotalFacturado = productInfo?.monto_total_facturado || 0;
+  const montoTotalFacturado = formatCurrency(productInfo?.monto_total_facturado || 0);
   const cupoTotalAvanceEfectivo = productInfo?.cupo_total_avance_efectivo || 0;
   const cupoUtilizadoAvanceEfectivo = productInfo?.cupo_utilizado_avance_efectivo || 0;
   const tasasInteresVigenteRotativo = productInfo?.tasas_interes_vigente_rotativo || 0;
   const cupoDisponibleAvanceEfectivo = productInfo?.cupo_disponible_avance_efectivo || 0;
   const tasasInteresVigenteAvanceCuotas = productInfo?.tasas_interes_vigente_avance_cuotas || 0;
   const tasasInteresVigenteCompraCuotas = productInfo?.tasas_interes_vigente_compra_cuotas || 0;
+  const fechaTopePago = new Date(2024, 11, 5).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
 
 
 
@@ -226,6 +236,21 @@ const ProcessHeader = ({ reloadCandidates }) => {
     )
   }
 
+  const alerts = [
+    {
+      icon: '😱',
+      text: 'El uso de tus tarjetas está al límite y estás generando intereses.'
+    },
+    {
+      icon: '⚖️',
+      text: 'Reduce gastos en restaurantes y busca alternativas de transporte.'
+    },
+    {
+      icon: '👍',
+      text: 'Pagaste un monto considerable a la tarjeta de forma anticipada.'
+    }
+  ]
+
   return (
     <>
       {isModalOpen && (
@@ -262,54 +287,29 @@ const ProcessHeader = ({ reloadCandidates }) => {
             <span className="absolute inset-0 animate-ripple-3 bg-white/30"></span>
           </Button>
         </div>
-        <div className="grid">
-          <div className="flex items-center gap-2">
+        <div className='flex flex-row p-6 gap-12 border-1 border-gray-100 rounded-md m-2'>
+          {alerts.map((alert, index) => (
+            <div className='flex flex-col'>
+              {alert.icon}
+              <p>{alert.text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 grid-rows-2 gap-4">
+          <div className='row-span-2'>
             <CreditCard process={process} nombreTitular={nombreTitular} numeroTarjeta={numeroTarjeta} cupoTotal={cupoTotal} cupoUtilizado={cupoUtilizado} cupoDisponible={cupoDisponible} />
           </div>
-          <div className="flex items-center gap-1">
-          </div>
-        </div>
-
-
-        <div className="bg-white rounded-lg">
-          <div className="justify-between items-center mb-4">
+          <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
             <div>
-              <h2 className=" inline">Inicio de facturación: </h2>
-              <p className="text-lg inline">{fechas.estado || ''} - Fecha de pago: {fechas.pago || ''}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-gray-500">Disponible Total</p>
-              <p className="text-2xl font-semibold">
-                ${cupoDisponible?.toLocaleString('es-CL') || '0'}
-              </p>
+              <span class="font-bold text-2xl">{fechaTopePago},</span> <span className="font-bold text-2xl text-gray-500">2024</span>
+              <p>Fecha tope de pago</p>
             </div>
           </div>
-
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-500">Utilizado Total</p>
-                <p className="text-xl font-semibold">
-                  ${cupoUtilizado.toLocaleString('es-CL')}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-gray-500">Cupo Total</p>
-                <p className="text-xl font-semibold">
-                  ${cupoTotal.toLocaleString('es-CL')}
-                </p>
-              </div>
+          <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
+            <div>
+              <span className="font-bold text-2xl">{montoTotalFacturado}</span>
+              <p>Deuda total</p>
             </div>
-
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-black h-2 rounded-full"
-                style={{
-                  width: `${Math.min(100, (cupoUtilizado / cupoTotal) * 100 || 0)}%`
-                }}
-              />
-            </div>
-
           </div>
         </div>
 
@@ -356,7 +356,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
             </div>
           </div>
         )}
-      </div>
+      </div >
     </>
   )
 }

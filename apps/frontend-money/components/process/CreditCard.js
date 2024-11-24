@@ -13,7 +13,8 @@ export const CreditCard = ({ process, nombreTitular, numeroTarjeta, cupoTotal, c
                 <span className="text-gray-800 text-bold">{cupoTotal}</span>
             </div>
             <div className="flex w-full">
-                <progress className="w-full rounded-md"></progress>
+                <div className="bg-red-400 h-2 rounded-full" style={{ width: `${Math.min(100, (cupoUtilizado / cupoTotal) * 100 || 0)}%` }}>
+                </div>
             </div>
             <div className="flex flex-row justify-between">
                 <div className="flex flex-col text-left">
@@ -21,10 +22,10 @@ export const CreditCard = ({ process, nombreTitular, numeroTarjeta, cupoTotal, c
                     <span className="text-gray-600">Utilizado</span>
                 </div>
                 <div className="flex flex-col text-right">
-                    <span className="text-blue-700">{cupoDisponible}</span>
+                    <span className="text-red-400">{cupoDisponible}</span>
                     <span className="text-gray-600">Disponible</span>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
