@@ -104,7 +104,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
     const getProduct = async () => {
       try {
         const productData = await fetchProductInfo();
-        console.log('🏦 Product Data:', {
+        console.log('\n\n\n🏦 Product Data:', {
           productData,
           type: typeof productData,
           keys: Object.keys(productData || {})
@@ -120,18 +120,18 @@ const ProcessHeader = ({ reloadCandidates }) => {
 
   const [productInfo, setProductInfo] = useState(null);
 
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const productData = await fetchProductInfo();
-        setProductInfo(productData);
-      } catch (error) {
-        console.error('❌ Error getting product:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const getProduct = async () => {
+  //     try {
+  //       const productData = await fetchProductInfo();
+  //       setProductInfo(productData);
+  //     } catch (error) {
+  //       console.error('❌ Error getting product:', error);
+  //     }
+  //   };
 
-    getProduct();
-  }, []);
+  //   getProduct();
+  // }, []);
 
   // Ahora puedes acceder a productInfo en cualquier parte del componente
   const cupoTotal = productInfo?.cupo_total || 0;
