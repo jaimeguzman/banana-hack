@@ -1,16 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { Progress } from '@nextui-org/react'
 import { useRouter } from 'next/router'
-import { updateCandidateStatus, VALID_CANDIDATE_STATUSES } from '../services/candidateService'
-import Select from 'react-select'
-import Link from 'next/link'
-import { FaLinkedin } from 'react-icons/fa'
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useEffect, useRef, useState } from 'react'
+import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useProcess } from '../context/ProcessContext'
-import { Progress } from '@nextui-org/react'
+import { updateCandidateStatus } from '../services/candidateService'
+import { updateProcessCount } from '../services/process/actions/updateProcessCount'
 import Dropdown from './ui/Dropdown'
-import { Icon } from '@iconify/react'
-import { updateProcessCount } from '../services/process/actions/updateProcessCount';
 
 
 /**
@@ -193,25 +189,34 @@ const CandidateTable = () => {
     }).format(amount)
   }
 
+  const categoriesNames = candidates.map((candidate) => candidate.category)
+  const escencialesNames = ['salud', 'seguros', 'supermercados']
+  const ocioNames = ['restaurantes', 'entretenimiento', 'viajes']
+  const inversionesNames = ['servicios digitales', 'negocios']
+
+  const escenciales = candidates.filter((candidate) => escencialesNames.includes(candidate.category)).map((candidate) => candidate.total).reduce((acc, total) => acc + total, 0)
+  const ocio = candidates.filter((candidate) => ocioNames.includes(candidate.category)).map((candidate) => candidate.total).reduce((acc, total) => acc + total, 0)
+  const inversiones = candidates.filter((candidate) => inversionesNames.includes(candidate.category)).map((candidate) => candidate.total).reduce((acc, total) => acc + total, 0)
+
   const groups = [
     {
       icon: '🏡',
       percentaje: 26,
-      amount: 151_466,
+      amount: escenciales,
       title: 'Escenciales',
       description: 'Necesidades básicas, salud, seguros',
     },
     {
       icon: '🍿',
       percentaje: 67.5,
-      amount: 392_604,
+      amount: ocio,
       title: 'Ocio',
       description: 'Restaurantes, entretenimiento, viajes',
     },
     {
       icon: '🪴',
       percentaje: 6.5,
-      amount: 37_379,
+      amount: inversiones,
       title: 'Inversiones',
       description: 'Servicios digitales, negocios',
     },
@@ -249,7 +254,7 @@ const CandidateTable = () => {
                 {
                   label: 'Ver',
                   onClick: () => handleOptionClick('ver', candidate.id),
-                } 
+                }
                 ,
                 // {
                 //   label: 'Agendar',
