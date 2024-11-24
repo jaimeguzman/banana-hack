@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="./docs/favicon-kairos.svg" />
+</p>
+
+
 # Gestión Simplificada de Tarjetas de Crédito
 
 ¡Bienvenido/a! Este proyecto está diseñado para facilitar la gestión de tarjetas de crédito, ayudando a los usuarios a tomar decisiones financieras más inteligentes y evitar pagar únicamente intereses sin reducir sus deudas.
