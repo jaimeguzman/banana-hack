@@ -154,12 +154,12 @@ const ProcessHeader = ({ reloadCandidates }) => {
 
 
   // Ahora puedes acceder a productInfo en cualquier parte del componente
-  const cupoTotal = productInfo?.cupo_total || 0;
+  const cupoTotal = formatCurrency(productInfo?.cupo_total) || 0;
   const caeRotativo = productInfo?.cae_rotativo || 0;
-  const cupoUtilizado = productInfo?.cupo_utilizado || 0;
+  const cupoUtilizado = formatCurrency(productInfo?.cupo_utilizado) || 0;
   const nombreTitular = productInfo?.nombre_titular || 'Santiago F';
   const numeroTarjeta = productInfo?.numero_tarjeta || 'XXXX';
-  const cupoDisponible = productInfo?.cupo_disponible || 0;
+  const cupoDisponible = formatCurrency(productInfo?.cupo_disponible) || 0;
   const caeAvanceCuotas = productInfo?.cae_avance_cuotas || 0;
   const caeCompraCuotas = productInfo?.cae_compra_cuotas || 0;
   const fechaPagarHasta = productInfo?.fecha_pagar_hasta
@@ -316,14 +316,14 @@ const ProcessHeader = ({ reloadCandidates }) => {
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
             <div>
-              <span className="font-bold text-2xl">{montoMinimoPagar}</span>
+              <span className="font-bold text-2xl">{cupoUtilizado}</span>
               <p>Compras realizadas</p>
             </div>
           </div>
           <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
             <div>
-              <span className="font-bold text-2xl">{cupoTotalAvanceEfectivo}</span>
-              <p>Pagos a la tarjeta</p>
+              <span className="font-bold text-2xl">{montoMinimoPagar}</span>
+              <p>Monto minimo a pagar</p>
             </div>
           </div>
           <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">

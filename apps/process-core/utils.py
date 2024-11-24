@@ -144,6 +144,7 @@ def validate_phone_number(phone: str) -> str:
 def insert_suggestion_to_supabase(process_id: str, suggestion: str) -> None:
     try:
         # La suggestion se guarda en la tabla de procesos
+        print(f"suggestion: {suggestion}")
         process_data = {
             "id": process_id,
             "suggestion": suggestion,
@@ -151,13 +152,6 @@ def insert_suggestion_to_supabase(process_id: str, suggestion: str) -> None:
 
         # Log para debugging
         logger.debug(f"Insertando sugerencia con datos: {process_data}")
-
-        response = (
-            supabase.table("processes")
-            .select("suggestion")
-            .eq("id", process_id)
-            .execute()
-        )
 
         response = (
             supabase.table("processes")

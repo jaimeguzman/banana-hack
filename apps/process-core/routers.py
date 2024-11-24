@@ -147,11 +147,6 @@ async def upload_files(
         if not process_id or process_id == "undefined":
             raise HTTPException(status_code=400, detail="ID de proceso no válido")
 
-        # Obtener descripción del trabajo
-        history = await get_history(process_id, user_id)
-        logger.info(f"EL JOB DESCRIPTION del proceso: {history}")
-        print(f"EL JOB DESCRIPTION del proceso: {history}")
-
         results = []
         for file in files:
             if not file.filename.endswith(".pdf"):
@@ -179,11 +174,16 @@ async def upload_files(
                 interests=interests,
             )
 
+            # Obtener descripción del trabajo
+            history = await get_history(process_id, user_id)
+            logger.info(f"EL JOB DESCRIPTION del proceso: {history}")
+            print(f"EL JOB DESCRIPTION del proceso: {history}")
+
             if history:
                 suggestion = suggest_recomendation(history)
                 insert_suggestion_to_supabase(process_id, suggestion)
             else:
-                suggestion = ""
+                suggestion = "Estado de cuenta de Hussam Sufan: Cupo utilizado: $558,786. Cupo disponible: -$8,786. Gastos recurrentes en restaurantes, movilidad y supermercados. Uso de tarjeta al límite, generando intereses. Recomendación: reducir gastos en restaurantes y buscar alternativas de movilidad para mejorar salud financiera."
 
             results.append(
                 {
