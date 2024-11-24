@@ -28,18 +28,23 @@ export const fetchBanks = async () => {
  * Obtiene la información del producto de un candidato específico
  * 
  */
-export const fetchProductInfo = async (candidateId) => {
+export const fetchProductInfo = async () => {
   try {
-
-
+    const userSession = localStorage.getItem('userSession');
+    const user = JSON.parse(userSession);
 
     const { data, error } = await supabase
       .from('candidates')
-      .select('product')
-      .eq('id', candidateId)
+      .select(`
+        id,
+        process_id,
+        product
+      `)      
+      .eq('user_id', user.username)
       .single()
 
     if (error) throw error
+    console.log('\n\n📦 Product info:', data.product)
     return data.product
   } catch (error) {
     console.error('Error fetching product info:', error)

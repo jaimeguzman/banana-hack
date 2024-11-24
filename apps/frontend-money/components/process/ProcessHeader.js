@@ -98,6 +98,70 @@ const ProcessHeader = ({ reloadCandidates }) => {
   })
   // EOL @TODO esto se debe evitar registrar mas de un movimiento.
 
+  // 
+
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const productData = await fetchProductInfo();
+        console.log('🏦 Product Data:', {
+          productData,
+          type: typeof productData,
+          keys: Object.keys(productData || {})
+        });
+      } catch (error) {
+        console.error('❌ Error getting product:', error);
+      }
+    };
+    
+    getProduct();
+  }, []);
+
+
+  const [productInfo, setProductInfo] = useState(null);
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const productData = await fetchProductInfo();
+        setProductInfo(productData);
+      } catch (error) {
+        console.error('❌ Error getting product:', error);
+      }
+    };
+    
+    getProduct();
+  }, []);
+
+  // Ahora puedes acceder a productInfo en cualquier parte del componente
+  const cupoTotal = productInfo?.cupo_total || 0;
+  const caeRotativo = productInfo?.cae_rotativo || 0;
+  const cupoUtilizado = productInfo?.cupo_utilizado || 0;
+  const nombreTitular = productInfo?.nombre_titular || '';
+  const numeroTarjeta = productInfo?.numero_tarjeta || '';
+  const cupoDisponible = productInfo?.cupo_disponible || 0;
+  const caeAvanceCuotas = productInfo?.cae_avance_cuotas || 0;
+  const caeCompraCuotas = productInfo?.cae_compra_cuotas || 0;
+  const fechaPagarHasta = productInfo?.fecha_pagar_hasta || '';
+  const montoMinimoPagar = productInfo?.monto_minimo_pagar || 0;
+  const fechaEstadoCuenta = productInfo?.fecha_estado_cuenta || '';
+  const montoTotalFacturado = productInfo?.monto_total_facturado || 0;
+  const cupoTotalAvanceEfectivo = productInfo?.cupo_total_avance_efectivo || 0;
+  const cupoUtilizadoAvanceEfectivo = productInfo?.cupo_utilizado_avance_efectivo || 0;
+  const tasasInteresVigenteRotativo = productInfo?.tasas_interes_vigente_rotativo || 0;
+  const cupoDisponibleAvanceEfectivo = productInfo?.cupo_disponible_avance_efectivo || 0;
+  const tasasInteresVigenteAvanceCuotas = productInfo?.tasas_interes_vigente_avance_cuotas || 0;
+  const tasasInteresVigenteCompraCuotas = productInfo?.tasas_interes_vigente_compra_cuotas || 0;
+
+
+  
+
+
+
+
+  
+
   const handleOption = async (option) => {
     try {
       let updatedProcess
@@ -193,9 +257,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
             </Button>
           </div>
         </div>
-        {/*  */
-        
-        }
+
 
         <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
@@ -206,7 +268,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
             <div className="text-right">
               <p className="text-gray-500">Disponible Total</p>
               <p className="text-2xl font-semibold">
-                ${totals.cupoDisponible.toLocaleString('es-CL')}
+                ${cupoDisponible?.toLocaleString('es-CL') || '0'}
               </p>
             </div>
           </div>
@@ -216,13 +278,13 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <div>
                 <p className="text-gray-500">Utilizado Total</p>
                 <p className="text-xl font-semibold">
-                  ${totals.cupoUtilizado.toLocaleString('es-CL')}
+                  ${cupoUtilizado.toLocaleString('es-CL')}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-gray-500">Cupo Total</p>
                 <p className="text-xl font-semibold">
-                  ${totals.cupoTotal.toLocaleString('es-CL')}
+                  ${cupoTotal.toLocaleString('es-CL')}
                 </p>
               </div>
             </div>
@@ -231,7 +293,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <div 
                 className="bg-black h-2 rounded-full" 
                 style={{ 
-                  width: `${Math.min(100, (totals.cupoUtilizado / totals.cupoTotal) * 100 || 0)}%` 
+                  width: `${Math.min(100, (cupoUtilizado / cupoTotal) * 100 || 0)}%` 
                 }} 
               />
             </div>
@@ -241,35 +303,10 @@ const ProcessHeader = ({ reloadCandidates }) => {
         
         {/* @TODO: Codigo para deprecar */}
 
-        {/* <div className="grid grid-cols-3 text-base">
-          <div className="space-y-1">
-            <p>
-              <strong>Solicitado por:</strong> {process.requested_by}
-            </p>
-            <p>
-              <strong>Área:</strong> {process.area}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p>
-              <strong>Modalidad:</strong> {process.modality}
-            </p>
-            <p>
-              <strong>Inicio:</strong> {formatDate(process.start_date)}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p>
-              <strong>Creado por:</strong> {process.created_by}
-            </p>
-            <p>
-              <strong>Término:</strong> {formatDate(process.end_date)}
-            </p>
-          </div>
-        </div> */}
         <JobDetailsAccordion
           process={process}
         />
+
         <div className="flex items-center gap-2">
           <h3 className="font-semibold">Categorías:</h3>
           <div className="flex flex-wrap items-center gap-1">
