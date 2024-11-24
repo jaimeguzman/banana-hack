@@ -6,7 +6,7 @@ import Layout from '../Layout';
 import ProcessHeader from './ProcessHeader';
 import CandidateTable from '../CandidateTable';
 import { useProcess } from '../../context/ProcessContext';
-import { fetchCandidatesByProcessId } from '../../services/processService';
+import { fetchCandidatesByProcessId, normalizeCandidateData } from '../../services/processService';
 import { fetchProcessById } from '../../services/process/queries/fetchProcessById';
 
 /**
@@ -39,8 +39,9 @@ export default function ProcessContent() {
             fetchProcessById(id),
             fetchCandidatesByProcessId(id)
           ]);
+          
           setProcess(processData);
-          setCandidates(candidatesData);
+          setCandidates(normalizeCandidateData(candidatesData));
         } catch (error) {
           console.error('Error al cargar los datos del proceso:', error);
           router.push('/404');

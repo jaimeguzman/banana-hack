@@ -13,7 +13,6 @@ from supabase import Client, create_client
 
 from prompts.suggest_recomendation import suggest_recomendation
 from utils import (
-    calculate_match_score,
     extract_bank_document,
     insert_candidate_to_supabase,
     insert_suggestion_to_supabase,
@@ -101,16 +100,14 @@ async def get_history(process_id: str, user_id: str) -> Optional[str]:
     try:
         response = (
             supabase.table("candidates")
-            .select("client, product, movements")
+            .select("client, product, movements, interests")
             .eq("process_id", process_id)
             .eq("user_id", user_id)
             .execute()
         )
 
         if not response.data or len(response.data) == 0:
-            raise HTTPException(
-                status_code=404, detail=f"Proceso con ID {process_id} no encontrado"
-            )
+            return None
 
         process_data = response.data[-1]
         return process_data
@@ -182,9 +179,7 @@ async def upload_files(
 
             content = await file.read()
 
-            client, product, movements = extract_bank_document(content)
-
-            suggestion = suggest_recomendation(history)
+            client, product, movements, interests = extract_bank_document(content)
 
             # Subir a S3 si no está en modo debug
             s3_url = None
@@ -199,9 +194,12 @@ async def upload_files(
                 client=client,
                 product=product,
                 movements=movements,
+                interests=interests,
             )
 
-            insert_suggestion_to_supabase(process_id, suggestion)
+            if history:
+                suggestion = suggest_recomendation(history)
+                insert_suggestion_to_supabase(process_id, suggestion)
 
             results.append(
                 {

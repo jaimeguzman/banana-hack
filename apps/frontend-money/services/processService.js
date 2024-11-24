@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient';
 
- 
+
 /**
  * Obtiene los candidatos asociados a un proceso
  * @async
@@ -13,7 +13,7 @@ export const fetchCandidatesByProcessId = async (processId) => {
   try {
     const { data, error } = await supabase
       .from('candidates')
-      .select('id, name, update_date, interview_date, ai_score, status, linkedin_url')
+      .select('id, movements')
       .eq('process_id', processId)
       .order('update_date', { ascending: false });
 
@@ -21,12 +21,7 @@ export const fetchCandidatesByProcessId = async (processId) => {
 
     return data.map(candidate => ({
       id: candidate.id,
-      name: candidate.name,
-      updateDate: candidate.update_date,
-      interviewDate: candidate.interview_date,
-      aiScore: candidate.ai_score,
-      status: candidate.status,
-      linkedinUrl: candidate.linkedin_url
+      movements: candidate.movements,
     }));
   } catch (error) {
     console.error('Error al obtener los candidatos del proceso:', error);
@@ -34,9 +29,29 @@ export const fetchCandidatesByProcessId = async (processId) => {
   }
 };
 
+export const normalizeCandidateData = (candidates) => {
+  let movements = []
+  candidates.forEach((candidate) => {
+    movements.push(candidate.movements);
+  });
 
+  const cleanedData = movements.filter(
+    (item) => item !== null && !(typeof item === "object" && Object.keys(item).length === 0)
+  );
 
+  let categoriesTotals = {}
+  cleanedData.forEach((movement) => {
+    // Función para calcular la suma total de una categoría
+    const calculateCategoryTotal = (category) => {
+      return category.reduce((sum, item) => sum + item.total, 0);
+    };
 
+    for (const [category, items] of Object.entries(movement)) {
+      categoriesTotals[category] = calculateCategoryTotal(items);
+    }
+  });
 
-
- 
+  // DE ANTEMANO PIDO DISCULPAS POR ESTA FUNCION, NO ME GUSTA COMO QUEDO, 
+  // PERO EN EL CONTEXTO DE HACKATHON TODO VALE DX
+  return Object.entries(categoriesTotals).map(([category, total]) => ({ category, total }));
+};

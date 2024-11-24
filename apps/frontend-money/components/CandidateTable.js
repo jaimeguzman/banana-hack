@@ -33,10 +33,6 @@ const CandidateTable = () => {
   const router = useRouter()
 
 
-
-
-
-
   useEffect(() => {
     /**
      * Maneja el cierre del menú de opciones al hacer clic fuera de él
@@ -48,6 +44,8 @@ const CandidateTable = () => {
         setShowOptions(null);
       }
     }
+
+
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -107,12 +105,10 @@ const CandidateTable = () => {
    * @todo Conectar con el backend para las acciones de 'agendar' e 'historial'
    */
   const handleOptionClick = (option, candidateId) => {
-    console.log("entra po ctmmmm")
     console.log(`Opción seleccionada: ${option} para el candidato ${candidateId}`);
     switch (option) {
       case 'ver':
         console.log('Redirigiendo a:', `/candidates/${candidateId}`);
-        router.push(`/candidates/${candidateId}`)
         break
       case 'agendar':
         // TODO: Implementar la lógica para agendar una entrevista
@@ -184,7 +180,7 @@ const CandidateTable = () => {
           console.error('Error al actualizar el contador:', error);
         }
       };
-      
+
       updateCount();
     }
   }, [candidates.length, process?.id]);
@@ -199,15 +195,14 @@ const CandidateTable = () => {
           <thead>
             <tr className="bg-white">
               <th className={styles.th}></th>
-              <th className="py-2 pl-0 pr-2 text-left">Tipo de Movimiento</th>
-              <th className="py-2 pl-0 pr-2 text-left">Fecha Actualización</th>
+              <th className="py-2 pl-0 pr-2 text-left">Categoría</th>
+              <th className="py-2 pl-0 pr-2 text-left">Monto</th>
               <th className={styles.th}>Prefiltro AI</th>
               <th className={styles.th}>Estado</th>
             </tr>
           </thead>
           <tbody>
-            {candidates.map((candidate) => {
-              // console.log(candidate)
+            {candidates.map((candidate, index) => {
               const dropdownItems = [
                 {
                   label: 'Ver',
@@ -222,20 +217,19 @@ const CandidateTable = () => {
                   onClick: () => handleOptionClick('historial', candidate.id),
                 },
               ]
+                const category = candidate.category.charAt(0).toUpperCase() + candidate.category.slice(1).toLowerCase()
+              const moneda = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(candidate.total);
               return (
-                <tr key={candidate.id} className="border-b hover:bg-gray-50">
+                <tr key={index} className="border-b hover:bg-gray-50">
                   <td className="pl-4">
                     <Dropdown items={dropdownItems} />
                   </td>
                   <td className="px-0">
                     <div className="flex items-center gap-2">
-                      <Link href={`/candidates/${candidate.id}`}>
-                        <span className="text-primary hover:brightness-75">{candidate.name}</span>
-                      </Link>
+                      <span className="text-primary hover:brightness-75">{category}</span>
                     </div>
                   </td>
-                  <td className={styles.td}>{formatDate(candidate.updateDate)}</td>
-                  <td className={styles.td}>{formatDate(candidate.interviewDate)}</td>
+                  <td className={styles.td}>{moneda}</td>
                   <td className={styles.td}>
                     <Progress
                       color={getScoreColor(candidate.aiScore)}

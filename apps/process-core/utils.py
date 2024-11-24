@@ -12,6 +12,7 @@ from supabase import Client, create_client
 
 from matcher_algo import calculate_match_score
 from prompts.extract_client import extract_client
+from prompts.extract_interests import extract_interests
 from prompts.extract_movements import extract_movements
 from prompts.extract_product import extract_product
 
@@ -100,8 +101,9 @@ def extract_bank_document(file_content: bytes) -> dict:
         client = extract_client(text)
         product = extract_product(text)
         movements = extract_movements(text)
+        interests = extract_interests(text)
 
-        return client, product, movements
+        return client, product, movements, interests
 
     except Exception as e:
         print("\n" + "=" * 50)
@@ -178,7 +180,7 @@ def insert_suggestion_to_supabase(process_id: str, suggestion: str) -> None:
 
 
 def insert_candidate_to_supabase(
-    process_id: str, user_id: str, client: dict, product: dict, movements: dict
+    process_id: str, user_id: str, client: dict, product: dict, movements: dict, interests: dict
 ) -> None:
     """
     Inserta la información del candidato en la base de datos de Supabase.
@@ -199,6 +201,7 @@ def insert_candidate_to_supabase(
             "client": client,
             "product": product,
             "movements": movements,
+            "interests": interests,
         }
 
         # Log para debugging
