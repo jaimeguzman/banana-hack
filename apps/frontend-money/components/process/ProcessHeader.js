@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import { Chip } from '@nextui-org/react'
 import { useRouter } from 'next/router'
-import UploadModal from '../UploadModal'
-import { deleteProcess } from '../../services/process/actions/deleteProcess'
-import { updateProcess } from '../../services/process/actions'
-import { useProcess } from '../../context/ProcessContext'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-toastify'
+import { useProcess } from '../../context/ProcessContext'
+import { fetchAllProductsInfo, fetchProductInfo } from '../../services/banks/queries'
+import { updateProcess } from '../../services/process/actions'
+import { deleteProcess } from '../../services/process/actions/deleteProcess'
 import JobDetailsAccordion from '../modals/JobDetailsAccordion'
 import Button from '../ui/Button'
-import { Icon } from '@iconify/react'
-import { Chip } from '@nextui-org/react'
-import Link from 'next/link'
-import { fetchProductInfo, fetchAllProductsInfo } from '../../services/banks/queries';
+import UploadModal from '../UploadModal'
+import { CreditCard } from './CreditCard'
 
 
 /**
@@ -45,8 +44,8 @@ const ProcessHeader = ({ reloadCandidates }) => {
             .map(item => {
               try {
                 // Intentamos parsear el JSON si es string
-                const parsedProduct = item.product && typeof item.product === 'string' 
-                  ? JSON.parse(item.product) 
+                const parsedProduct = item.product && typeof item.product === 'string'
+                  ? JSON.parse(item.product)
                   : item.product
 
                 return {
@@ -92,7 +91,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         pago: product.fecha_pagar_hasta || acc.fechas.pago
       }
     }
-  }, { 
+  }, {
     totals: { cupoTotal: 0, cupoUtilizado: 0, cupoDisponible: 0 },
     fechas: { estado: '', pago: '' }
   })
@@ -114,7 +113,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         console.error('❌ Error getting product:', error);
       }
     };
-    
+
     getProduct();
   }, []);
 
@@ -130,7 +129,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         console.error('❌ Error getting product:', error);
       }
     };
-    
+
     getProduct();
   }, []);
 
@@ -138,14 +137,17 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const cupoTotal = productInfo?.cupo_total || 0;
   const caeRotativo = productInfo?.cae_rotativo || 0;
   const cupoUtilizado = productInfo?.cupo_utilizado || 0;
-  const nombreTitular = productInfo?.nombre_titular || '';
-  const numeroTarjeta = productInfo?.numero_tarjeta || '';
+  const nombreTitular = productInfo?.nombre_titular || 'Santiago F';
+  const numeroTarjeta = productInfo?.numero_tarjeta || 'XXXX';
   const cupoDisponible = productInfo?.cupo_disponible || 0;
   const caeAvanceCuotas = productInfo?.cae_avance_cuotas || 0;
   const caeCompraCuotas = productInfo?.cae_compra_cuotas || 0;
-  const fechaPagarHasta = productInfo?.fecha_pagar_hasta || '';
+  const fechaPagarHasta = productInfo?.fecha_pagar_hasta
+    ? new Date(productInfo.fecha_pagar_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+    : new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
   const montoMinimoPagar = productInfo?.monto_minimo_pagar || 0;
-  const fechaEstadoCuenta = productInfo?.fecha_estado_cuenta || '';
+  const fechaEstadoCuenta = productInfo?.fecha_estado_cuenta ? new Date(productInfo.fecha_pagar_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+    : new Date(2024, 9, 24).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
   const montoTotalFacturado = productInfo?.monto_total_facturado || 0;
   const cupoTotalAvanceEfectivo = productInfo?.cupo_total_avance_efectivo || 0;
   const cupoUtilizadoAvanceEfectivo = productInfo?.cupo_utilizado_avance_efectivo || 0;
@@ -155,12 +157,12 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const tasasInteresVigenteCompraCuotas = productInfo?.tasas_interes_vigente_compra_cuotas || 0;
 
 
-  
 
 
 
 
-  
+
+
 
   const handleOption = async (option) => {
     try {
@@ -222,45 +224,44 @@ const ProcessHeader = ({ reloadCandidates }) => {
           reloadCandidates={reloadCandidates}
         />
       )}
+
       <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Link 
-              href="/" 
-              className="flex items-center text-primary hover:text-primary/80 transition-colors"
-            >
-              <Icon icon="ph:caret-left-bold" className="text-2xl" />
-            </Link>
-            <div className="flex items-center gap-2">
-              <Icon icon="ic:twotone-credit-card" className="text-2xl text-success-500" />
-              <h1 className="text-2xl font-bold text-dark-blue">{process.name}</h1>
-              <Chip classNames={{ content: 'text-white' }} color="success">
-                {process.status}
-              </Chip>
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-col">
+            <p className='text-bold text-xl font-bold'>Estado de cuenta</p>
+            <div className='flex flex-row gap-2'>
+              <span className='font-bold'>{fechaEstadoCuenta}</span>
+              -
+              <span className='font-bold'>{fechaPagarHasta}</span>
             </div>
           </div>
+          <Button
+            color="primary"
+            className="font-semibold relative overflow-hidden w-64"
+            onClick={() => {
+              if (process.status !== 'Finalizado') {
+                setIsModalOpen(true)
+              }
+            }}
+            isDisabled={process.status === 'Finalizado'}
+          >
+            <span className="relative z-10">Subir cartolas</span>
+            <span className="absolute inset-0 animate-ripple-1 bg-white/30"></span>
+            <span className="absolute inset-0 animate-ripple-2 bg-white/30"></span>
+            <span className="absolute inset-0 animate-ripple-3 bg-white/30"></span>
+          </Button>
+        </div>
+        <div className="grid">
+          <div className="flex items-center gap-2">
+            <CreditCard process={process} nombreTitular={nombreTitular} numeroTarjeta={numeroTarjeta} cupoTotal={cupoTotal} cupoUtilizado={cupoUtilizado} cupoDisponible={cupoDisponible} />
+          </div>
           <div className="flex items-center gap-1">
-            <Button
-              color="primary"
-              className="font-semibold relative overflow-hidden w-64"
-              onClick={() => {
-                if (process.status !== 'Finalizado') {
-                  setIsModalOpen(true)
-                }
-              }}
-              isDisabled={process.status === 'Finalizado'}
-            >
-              <span className="relative z-10">Subir cartolas</span>
-              <span className="absolute inset-0 animate-ripple-1 bg-white/30"></span>
-              <span className="absolute inset-0 animate-ripple-2 bg-white/30"></span>
-              <span className="absolute inset-0 animate-ripple-3 bg-white/30"></span>
-            </Button>
           </div>
         </div>
 
 
         <div className="bg-white rounded-lg">
-          <div className="flex justify-between items-center mb-4">
+          <div className="justify-between items-center mb-4">
             <div>
               <h2 className=" inline">Inicio de facturación: </h2>
               <p className="text-lg inline">{fechas.estado || ''} - Fecha de pago: {fechas.pago || ''}</p>
@@ -288,19 +289,19 @@ const ProcessHeader = ({ reloadCandidates }) => {
                 </p>
               </div>
             </div>
-            
+
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-black h-2 rounded-full" 
-                style={{ 
-                  width: `${Math.min(100, (cupoUtilizado / cupoTotal) * 100 || 0)}%` 
-                }} 
+              <div
+                className="bg-black h-2 rounded-full"
+                style={{
+                  width: `${Math.min(100, (cupoUtilizado / cupoTotal) * 100 || 0)}%`
+                }}
               />
             </div>
 
           </div>
         </div>
-        
+
         {/* @TODO: Codigo para deprecar */}
 
         <JobDetailsAccordion

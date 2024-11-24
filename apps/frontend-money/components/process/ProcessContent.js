@@ -72,7 +72,6 @@ export default function ProcessContent() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-
         <ProcessHeader reloadCandidates={reloadCandidates} />
         <CandidateTable />
       </main>
