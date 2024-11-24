@@ -11,7 +11,7 @@ import { Select, SelectItem } from '@nextui-org/react';
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-quill/dist/quill.snow.css'; // Importa los estilos de Quill
+import 'react-quill/dist/quill.snow.css'; // Importa los estilos de Quill DEPRECAR
 
 // Importación dinámica de CreatableAsyncSelect con SSR desactivado
 const CreatableAsyncSelect = dynamic(
@@ -20,7 +20,7 @@ const CreatableAsyncSelect = dynamic(
 );
 
 // Importación dinámica de ReactQuill para evitar problemas con SSR
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+// const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 /**
  * Select de bancos simplificado
@@ -31,9 +31,9 @@ const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
  */
 const BankSelect = ({ banks, onChange, value }) => (
   <div className="form-group">
-    <label htmlFor="bank" className="block text-gray-700 text-sm font-bold mb-2">
+    {/* <label htmlFor="bank" className="block text-gray-700 text-sm font-bold mb-2">
       Selecciona un banco
-    </label>
+    </label> */}
     <select
       id="bank"
       name="name"
@@ -45,7 +45,7 @@ const BankSelect = ({ banks, onChange, value }) => (
       <option value="" disabled>Selecciona un banco</option>
       {banks.map((bank) => (
         <option key={bank.id} value={bank.name}>
-          {bank.name} - {bank.tipo}
+          {bank.name}
         </option>
       ))}
     </select>
@@ -109,8 +109,6 @@ const CreateProcessForm = () => {
 
   /**
    * Maneja los cambios en los campos del formulario
-   * @function handleInputChange
-   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>} e - Evento de cambio
    */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -236,23 +234,11 @@ const CreateProcessForm = () => {
 
   return (
     <div className="p-4 space-y-4 bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
-      <h2 className="text-2xl font-bold text-primary">Crear Nuevo Proceso</h2>
-      <p className="font-semibold">Especifica los detalles del proceso de kairo</p>
+      <h2 className="text-2xl font-bold text-primary">Empezemos a ordenar</h2>
+      <p className="font-semibold">Te ayudamos a ordenar y entender tus gastos, elige tu banco y el mes que quieres ordenar</p>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4 mb-4">
 
-
-        <input
-            color="primary"
-            variant="bordered"
-            type="text"
-            name="name"
-            placeholder="Nombre del Kairo"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="border p-2 rounded"
-            required
-          />
 
 
           <BankSelect 
@@ -260,6 +246,8 @@ const CreateProcessForm = () => {
             value={formData.name}
             onChange={handleInputChange}
           />
+
+
           <select            
             color="primary"
             variant="bordered"
@@ -275,6 +263,19 @@ const CreateProcessForm = () => {
             <option value="WalletCard" disabled>Billetera Virtual</option>
           </select>
 
+
+
+          <input
+            color="primary"
+            variant="bordered"
+            type="text"
+            name="name"
+            placeholder="Nombre de tu Tarjeta de Crédito"
+            value={formData.name}
+            onChange={handleInputChange}
+            className="border p-2 rounded"
+            required
+          />
 
  
  
