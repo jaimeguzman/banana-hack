@@ -261,7 +261,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         />
       )}
 
-      <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg text-dark-blue">
+      <div className="flex flex-col gap-3 p-4 mb-4 mt-[15px] bg-white rounded-lg text-dark-blue">
         <div className="flex flex-row justify-between">
           <div className="flex flex-col">
             <p className='text-bold text-xl font-bold'>Estado de cuenta</p>
@@ -273,7 +273,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           </div>
           <Button
             color="primary"
-            className="font-semibold relative overflow-hidden w-64"
+            className="font-semibold relative overflow-hidden w-96"
             onClick={() => {
               if (process.status !== 'Finalizado') {
                 setIsModalOpen(true)
