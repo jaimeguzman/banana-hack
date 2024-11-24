@@ -200,6 +200,8 @@ async def upload_files(
             if history:
                 suggestion = suggest_recomendation(history)
                 insert_suggestion_to_supabase(process_id, suggestion)
+            else:
+                suggestion = ""
 
             results.append(
                 {
