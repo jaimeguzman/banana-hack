@@ -11,11 +11,13 @@ export default function Layout({ children, process }) {
   const isHomePage = router.pathname === '/'
 
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white py-[30px]">
       {isHomePage ? (
-        <div className="w-92 py-4 px-4">
+        <div className="w-92 min-h-screen bg-white border-r border-gray-200">
+        <div className="p-4">
           <Logo />
         </div>
+      </div>
       ) : (
         <Sidebar />
       )}

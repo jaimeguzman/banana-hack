@@ -61,7 +61,7 @@ const Sidebar = () => {
 
   return (
     <aside className="w-92 min-h-screen overflow-y-auto text-gray-800 bg-white">
-      <div className="flex flex-col gap-6 p-4">
+      <div className="flex flex-col gap-8 p-6">
         <Logo />
         <Button
           variant="solid"
