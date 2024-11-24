@@ -31,7 +31,7 @@ const JobDetailsAccordion = ({ process }) => {
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center justify-between p-4 transition-colors cursor-pointer bg-gray-20 hover:bg-gray-100"
       >
-        <h3 className="mr-2 font-semibold">Recomendaciones o Consideraciones</h3>
+        <h3 className="mr-2 font-semibold">Recomendaciones financieras</h3>
         {isExpanded ? (
           <FiChevronUp className="w-5 h-5 text-gray-600" />
         ) : (
