@@ -42,7 +42,7 @@ const BankSelect = ({ banks, onChange, value }) => (
       name="name"
       value={value}
       onChange={onChange}
-      className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+      className="w-full p-3 border border-gray-300 rounded-lg"
       required
     >
       <option value="" disabled>Selecciona un banco</option>
@@ -236,119 +236,126 @@ const CreateProcessForm = () => {
   };
 
   return (
-    <div className="flex justify-left mt-[50px]">
-      <div className="w-4/4 p-4 space-y-4 bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
-            <div className="flex items-center gap-4 mb-4">
-              <Link 
-                href="/" 
-                className="flex items-center text-primary hover:text-primary/80 transition-colors"
-              >
-                <Icon icon="ph:caret-left-bold" className="text-2xl" />
-              </Link>
-              <h2 className="text-2xl font-bold text-primary">Empezemos a ordenar</h2>
-            </div>
-        <p className="font-semibold">Te ayudamos a ordenar y entender tus gastos, elige tu banco y el mes que quieres ordenar</p>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-3 gap-4 mb-4">
+    <div className="flex-1 p-8">
+      <div className="max-w-2xl">
+        <div className="flex items-center gap-4 mb-6">
+          <Link 
+            href="/" 
+            className="flex items-center text-primary hover:text-primary/80 transition-colors"
+          >
+            <Icon icon="ph:caret-left-bold" className="text-2xl" />
+          </Link>
+          <h1 className="text-2xl font-bold">Nueva tarjeta de crédito</h1>
+        </div>
+        <p className="text-gray-600 mb-6">Sube un estado de cuenta</p>
+        <p className="font-semibold mb-6">Te ayudamos a ordenar y entender tus gastos, elige tu banco y el mes que quieres ordenar</p>
 
+        <form onSubmit={handleSubmit} className="space-y-6">
 
-
+          <div>
+            <label className="block mb-2 font-medium">Indica el banco</label>
             <BankSelect 
               banks={banks}
               value={formData.name}
               onChange={handleInputChange}
             />
+          </div>
 
 
+          <div>
+            <label className="block mb-2 font-medium">Seleccionar producto</label>
             <select            
               color="primary"
               variant="bordered"
               name="typeProduct"
-              className="border p-2 rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg"
               placeholder="Seleccion Producto"
               defaultValue=""
               required
             >
-              <option value="" disabled>Seleccion Producto</option>
-              <option value="CreditCard">Tarjeta de Credito</option>
-              <option value="DebitCard" disabled>Tarjeta de Debito</option>
+              <option value="" disabled>Selecciona un producto</option>
+              <option value="CreditCard">Tarjeta de Crédito</option>
+              <option value="DebitCard" disabled>Tarjeta de Débito</option>
               <option value="WalletCard" disabled>Billetera Virtual</option>
             </select>
+          </div>
 
-
-
+          <div>
+            <label className="block mb-2 font-medium">Dale un nombre a tu tarjeta</label>
             <input
-              color="primary"
-              variant="bordered"
               type="text"
               name="name"
-              placeholder="Nombre de tu Tarjeta de Crédito"
+              placeholder="Por ejemplo, Visa"
               value={formData.name}
               onChange={handleInputChange}
-              className="border p-2 rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg"
               required
             />
-
- 
- 
- 
-          </div>
-          <div className="flex gap-4 items-center mb-6">
-            <div className="flex-1">
-              <p className="font-semibold mb-2">Indíca el mes del proceso de kairo</p>
-              <select
-                name="selectedDate"
-                value={formData.selectedDate}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                required
-              >
-                <option value="" disabled>Selecciona el mes</option>
-                {generateDateOptions().map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex-1">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="requiredSkills">
-                Clasificaciones financieras
-              </label>
-              {isClient && (
-                <CreatableAsyncSelect
-                  isMulti
-                  cacheOptions
-                  defaultOptions={skillOptions}
-                  loadOptions={loadOptions}
-                  onCreateOption={async (inputValue) => {
-                    const newOption = await handleCreateSkill(inputValue);
-                    if (newOption) {
-                      handleSkillsChange([...formData.requiredSkills, newOption], 'requiredSkills');
-                    }
-                  }}
-                  onChange={(selectedOptions) => handleSkillsChange(selectedOptions, 'requiredSkills')}
-                  placeholder="Selecciona o escribe para agregar..."
-                  formatCreateLabel={(inputValue) => `Crear "${inputValue}"`}
-                  noOptionsMessage={() => 'No hay opciones'}
-                  loadingMessage={() => 'Cargando...'}
-                />
-              )}
-            </div>
           </div>
 
- 
 
-       
 
-          <div className="flex justify-end mt-6">
+          <div>
+            <label className="block mb-2 font-medium">Indica el mes del proceso</label>
+            <select
+              name="selectedDate"
+              value={formData.selectedDate}
+              onChange={handleInputChange}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              required
+            >
+              <option value="" disabled>Selecciona el mes</option>
+              {generateDateOptions().map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+
+
+          <div>
+            <label className="block mb-2 font-medium">Clasificaciones financieras</label>
+            {isClient && (
+              <CreatableAsyncSelect
+                isMulti
+                cacheOptions
+                defaultOptions={skillOptions}
+                loadOptions={loadOptions}
+                className="w-full"
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    padding: '6px',
+                    borderRadius: '0.5rem',
+                    borderColor: '#D1D5DB'
+                  })
+                }}
+                onCreateOption={async (inputValue) => {
+                  const newOption = await handleCreateSkill(inputValue);
+                  if (newOption) {
+                    handleSkillsChange([...formData.requiredSkills, newOption], 'requiredSkills');
+                  }
+                }}
+                onChange={(selectedOptions) => handleSkillsChange(selectedOptions, 'requiredSkills')}
+                placeholder="Selecciona o escribe para agregar..."
+                formatCreateLabel={(inputValue) => `Crear "${inputValue}"`}
+                noOptionsMessage={() => 'No hay opciones'}
+                loadingMessage={() => 'Cargando...'}
+              />
+            )}
+          </div>
+
+
+
+          <div className="flex justify-center pt-4">
             <button
               type="submit"
-              className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors"
+              className="w-full bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creando...' : 'Crear Proceso'}
+              {isSubmitting ? 'Creando...' : 'Crear tarjeta'}
             </button>
           </div>
         </form>
