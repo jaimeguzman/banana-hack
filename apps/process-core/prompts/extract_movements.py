@@ -19,8 +19,13 @@ def extract_movements(text: str) -> dict:
         otro ejemplo, si aparece uber, cabify, didi o similares, tendrás que crear la categoria "movilidad" y sumar todas las transacciones asociadas. 
 
         y así con todas las categorias que encuentres. las más comunes son: supermercados, restaurantes, movilidad, combustible, entretenimiento, salud. considera otras relevantes.
-        *Entrégame el resultado en JSON *
         *Sin comentarios*
+        Por favor, responde siempre con un JSON que siga esta estructura exacta:
+        {
+            "categoria": [
+                {"nombre": "string", "total": "integer"},
+            ]
+        }
         el json serán todos los movimientos asociados a cada categoría.
     """
 
@@ -52,7 +57,9 @@ def extract_movements(text: str) -> dict:
     print("=" * 50 + "\n")
 
     # Crear diccionario final
-    result = tc_data
+    movimientos = tc_data
+
+    result = movimientos
 
     # Debug del resultado final
     print("\n" + "=" * 50)

@@ -11,10 +11,12 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 from supabase import Client, create_client
 
+from prompts.suggest_recomendation import suggest_recomendation
 from utils import (
     calculate_match_score,
     extract_bank_document,
     insert_candidate_to_supabase,
+    insert_suggestion_to_supabase,
 )
 
 # @TODO esto se debe recuperar de la base de datos.
@@ -83,7 +85,7 @@ def clean_html_text(html_content: str) -> str:
     return clean_text
 
 
-async def get_job_description(process_id: str) -> Optional[str]:
+async def get_history(process_id: str, user_id: str) -> Optional[str]:
     """
     Recupera la descripción del trabajo desde Supabase para un proceso específico.
 
@@ -98,9 +100,10 @@ async def get_job_description(process_id: str) -> Optional[str]:
     """
     try:
         response = (
-            supabase.table("processes")
-            .select("job_functions, job_requirements")
-            .eq("id", process_id)
+            supabase.table("candidates")
+            .select("client, product, movements")
+            .eq("process_id", process_id)
+            .eq("user_id", user_id)
             .execute()
         )
 
@@ -109,19 +112,8 @@ async def get_job_description(process_id: str) -> Optional[str]:
                 status_code=404, detail=f"Proceso con ID {process_id} no encontrado"
             )
 
-        process_data = response.data[0]
-        # Limpiar HTML de los campos
-        job_functions = clean_html_text(process_data.get("job_functions", ""))
-        job_requirements = clean_html_text(process_data.get("job_requirements", ""))
-
-        # Combina las funciones y requisitos del trabajo
-        return f"""
-        Job functions:
-        {job_functions}
-
-        Qualifications and requirements:
-        {job_requirements}
-        """
+        process_data = response.data[-1]
+        return process_data
     except Exception as e:
         logger.error(f"Error al recuperar descripción del trabajo: {str(e)}")
         raise HTTPException(
@@ -177,9 +169,9 @@ async def upload_files(
             raise HTTPException(status_code=400, detail="ID de proceso no válido")
 
         # Obtener descripción del trabajo
-        job_description = await get_job_description(process_id)
-        logger.info(f"EL JOB DESCRIPTION del proceso: {job_description}")
-        print(f"EL JOB DESCRIPTION del proceso: {job_description}")
+        history = await get_history(process_id, user_id)
+        logger.info(f"EL JOB DESCRIPTION del proceso: {history}")
+        print(f"EL JOB DESCRIPTION del proceso: {history}")
 
         results = []
         for file in files:
@@ -192,11 +184,7 @@ async def upload_files(
 
             client, product, movements = extract_bank_document(content)
 
-            # @ TODO: Acá iría la recomendacion de AI
-            # match_result = await calculate_match_score(
-            #     cv_info["experiencia"],
-            #     job_description
-            # )
+            suggestion = suggest_recomendation(history)
 
             # Subir a S3 si no está en modo debug
             s3_url = None
@@ -206,14 +194,20 @@ async def upload_files(
             # @TODO: cada vez que se inserta debería guardarse la url del objeto PDF de s3
 
             insert_candidate_to_supabase(
-                process_id, user_id=user_id, client=client, product=product, movements=movements
+                process_id,
+                user_id=user_id,
+                client=client,
+                product=product,
+                movements=movements,
             )
+
+            insert_suggestion_to_supabase(process_id, suggestion)
 
             results.append(
                 {
                     "filename": file.filename,
                     "size": len(content),
-                    "cv_info": client,
+                    "suggestion": suggestion,
                     # "ai_score": match_result["match_score"],
                     # "match_feedback": match_result["explanation"] # ,  "s3_url": s3_url
                 }

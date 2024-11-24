@@ -139,6 +139,44 @@ def validate_phone_number(phone: str) -> str:
     return f"+{numbers}"
 
 
+def insert_suggestion_to_supabase(process_id: str, suggestion: str) -> None:
+    try:
+        # La suggestion se guarda en la tabla de procesos
+        process_data = {
+            "id": process_id,
+            "suggestion": suggestion,
+        }
+
+        # Log para debugging
+        logger.debug(f"Insertando sugerencia con datos: {process_data}")
+
+        response = (
+            supabase.table("processes")
+            .select("suggestion")
+            .eq("id", process_id)
+            .execute()
+        )
+
+        response = (
+            supabase.table("processes")
+            .update({"suggestion": suggestion})
+            .eq("id", process_id)
+            .execute()
+        )
+
+        if hasattr(response, "error") and response.error is not None:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error al insertar en Supabase: {response.error}",
+            )
+
+    except Exception as e:
+        logger.error(f"Error al insertar proceso: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error al insertar candidato: {str(e)}"
+        )
+
+
 def insert_candidate_to_supabase(
     process_id: str, user_id: str, client: dict, product: dict, movements: dict
 ) -> None:
