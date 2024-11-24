@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 /**
  * @typedef {Object} FinancialData
- * @property {string} userName - Nombre del usuario
+ * @property {string} userName - Nombre del usuario desde la sesión
  * @property {Object} alerts - Alertas de salud financiera
  * @property {Object} stats - Estadísticas principales
  * @property {Object} categories - Categorías de gastos
@@ -13,21 +14,24 @@ import { Icon } from '@iconify/react'
  * @returns {JSX.Element} Componente de dashboard
  */
 export default function KPISection() {
+  const [userName, setUserName] = useState('Usuario')
+
+  useEffect(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('userSession'))
+      setUserName(user?.email?.split('@')?.[0] ?? 'Usuario')
+    } catch (error) {
+      console.error('Error al obtener el nombre de usuario:', error)
+      setUserName('Usuario')
+    }
+  }, [])
+
   // TODO: Conectar con el backend para obtener datos reales
   const financialData = {
-    userName: 'Hussam',
     alerts: [
       {
         icon: '😱',
-        text: 'El uso de tus tarjetas está al límite y estás generando intereses.'
-      },
-      {
-        icon: '⚖️',
-        text: 'Reduce gastos en restaurantes y busca alternativas de transporte.'
-      },
-      {
-        icon: '👍',
-        text: 'Pagaste un monto considerable a la tarjeta de forma anticipada.'
+        text: 'Queremos ayudarte a ordenar y entender tu salud financiera. El uso de tus tarjetas está al límite y estás generando intereses.'
       }
     ],
     stats: {
@@ -63,8 +67,8 @@ export default function KPISection() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-gray-500 text-lg">Hola {financialData.userName}</h2>
-        <h1 className="text-2xl font-bold">Así está tu salud financiera</h1>
+        <h2 className="text-gray-500 text-2xl mb-4">Hola {userName || 'que alegría volver a verte'} ! </h2>
+        <h1 className="text-4xl font-bold">Así está tu salud financiera</h1>
       </div>
 
       <div className="bg-white rounded-xl p-6">
