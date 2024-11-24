@@ -11,11 +11,11 @@ def extract_client(text: str) -> dict:
 
         identifica los datos que identifiquen al cliente, por ejemplo; nombre, rut.
 
-        Responde en este formato JSON con las siguientes keys:
+        Por favor, responde siempre con un JSON que siga esta estructura exacta:
         {
         "cliente": {
-        "prop1": "valor1",
-        "prop2": "valor2"
+        "rut": "string",
+        "nombre": "string"
         }
         }
         donde la key "cliente" es para identificar toda la información de cliente.
