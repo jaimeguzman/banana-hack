@@ -14,7 +14,7 @@ import Button from '../ui/Button'
 import { Icon } from '@iconify/react'
 import { Chip } from '@nextui-org/react'
 import Link from 'next/link'
-import { fetchProductInfo } from '../../services/banks/queries';
+import { fetchProductInfo, fetchAllProductsInfo } from '../../services/banks/queries';
 
 
 /**
@@ -31,9 +31,64 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [productsInfo, setProductsInfo] = useState([])
 
+  useEffect(() => {
+    const loadAllProductsInfo = async () => {
+      console.log('🔍 Debug - Starting loadAllProductsInfo')
+      console.log('📌 process?.id:', process?.id)
 
+      try {
+        if (process?.id) {
+          const data = await fetchAllProductsInfo()
+          console.log('✅ Raw data received:', data)
 
+          // Filtramos y parseamos los productos de manera segura
+          const processProducts = data
+            .filter(item => item.process_id === process.id)
+            .map(item => {
+              try {
+                // Intentamos parsear el JSON si es string
+                const parsedProduct = item.product && typeof item.product === 'string' 
+                  ? JSON.parse(item.product) 
+                  : item.product
+
+                return {
+                  ...item,
+                  product: parsedProduct || {}
+                }
+              } catch (parseError) {
+                console.error('Error parsing product JSON:', parseError)
+                return {
+                  ...item,
+                  product: {}
+                }
+              }
+            })
+            .filter(item => item.product && Object.keys(item.product).length > 0)
+
+          console.log('✅ Processed products:', processProducts)
+          setProductsInfo(processProducts)
+        }
+      } catch (error) {
+        console.error('❌ Error loading products info:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadAllProductsInfo()
+  }, [process?.id])
+
+  // Calculamos totales de manera segura
+  const totals = productsInfo.reduce((acc, curr) => {
+    const product = curr.product || {}
+    return {
+      cupoTotal: acc.cupoTotal + (Number(product.cupo_total) || 0),
+      cupoUtilizado: acc.cupoUtilizado + (Number(product.cupo_utilizado) || 0),
+      cupoDisponible: acc.cupoDisponible + (Number(product.cupo_disponible) || 0)
+    }
+  }, { cupoTotal: 0, cupoUtilizado: 0, cupoDisponible: 0 })
 
   const handleOption = async (option) => {
     try {
@@ -137,36 +192,42 @@ const ProcessHeader = ({ reloadCandidates }) => {
         <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
-              <p className="text-lg inline">20 oct - 19 nov, <span className="text-gray-500">2024</span>
-              </p>
+              <h2 className="text-gray-500 mb-1 inline">Total Candidatos: </h2>
+              <p className="text-lg inline">{productsInfo.length}</p>
             </div>
             <div className="text-right">
-              <p className="text-gray-500">Disponible</p>
-              <p className="text-2xl font-semibold">$9.138</p>
+              <p className="text-gray-500">Disponible Total</p>
+              <p className="text-2xl font-semibold">
+                ${totals.cupoDisponible.toLocaleString('es-CL')}
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-gray-500">Utilizado</p>
-                <p className="text-xl font-semibold">$5.920.862</p>
+                <p className="text-gray-500">Utilizado Total</p>
+                <p className="text-xl font-semibold">
+                  ${totals.cupoUtilizado.toLocaleString('es-CL')}
+                </p>
               </div>
               <div className="text-right">
-                <p className="text-gray-500">Cupo total</p>
-                <p className="text-xl font-semibold"> XXXXX </p>
-
+                <p className="text-gray-500">Cupo Total</p>
+                <p className="text-xl font-semibold">
+                  ${totals.cupoTotal.toLocaleString('es-CL')}
+                </p>
               </div>
             </div>
             
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-black h-2 rounded-full" style={{ width: '99%' }} />
+              <div 
+                className="bg-black h-2 rounded-full" 
+                style={{ 
+                  width: `${Math.min(100, (totals.cupoUtilizado / totals.cupoTotal) * 100 || 0)}%` 
+                }} 
+              />
             </div>
 
-            <div className="mt-6">
-
-            </div>
           </div>
         </div>
         
