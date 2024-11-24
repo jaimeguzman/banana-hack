@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth'
 export default function Layout({ children, process }) {
   useAuth()
   return (
-    <div className="flex bg-primary/10">
+    <div className="flex bg-white">
       <Sidebar />
       <div className="flex-1">
         <Navbar />

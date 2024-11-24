@@ -16,11 +16,27 @@ def extract_product(text: str) -> dict:
         tasas_interes_vigente_rotativo, tasas_interes_vigente compra_en_cuotas,tasas interes_vigente  avance_en_cuotas, cae rotativo, cae compra en cuotas.
         (Ten en cuenta que esto puede cambiar dependiendo del banco)
 
-        Responde en este formato JSON con las siguientes keys, idealmente sigue este ejemplo:
+        Por favor, responde siempre con un JSON que siga esta estructura exacta:
         {
         "producto": {
-        "prop1": "valor1",
-        "prop2": "valor2"
+        "nombre_titular": "string",
+        "numero_tarjeta": "string",
+        "fecha_estado_cuenta": "string",
+        "cupo_total": "integer",
+        "cupo_utilizado": "integer",
+        "cupo_disponible": "integer",
+        "cupo_total_avance_efectivo": "integer",
+        "cupo_utilizado_avance_efectivo": "integer",
+        "cupo_disponible_avance_efectivo": "integer",
+        "tasas_interes_vigente_rotativo": "float",
+        "tasas_interes_vigente_compra_cuotas": "float",
+        "tasas_interes_vigente_avance_cuotas": "float",
+        "cae_rotativo": "float",
+        "cae_compra_cuotas": "float",
+        "cae_avance_cuotas": "float",
+        "fecha_pagar_hasta": "string",
+        "monto_total_facturado": "integer",
+        "monto_minimo_pagar": "integer",
         }
         }
         donde la key "producto" es para identificar toda la información del producto.

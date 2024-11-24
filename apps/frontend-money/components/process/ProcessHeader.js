@@ -89,7 +89,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           reloadCandidates={reloadCandidates}
         />
       )}
-      <div className="flex flex-col gap-3 p-4 mb-4 bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
+      <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Link 
