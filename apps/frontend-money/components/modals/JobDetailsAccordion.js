@@ -45,9 +45,6 @@ const JobDetailsAccordion = ({ process }) => {
       >
         {/* @TODO: Refactorizar para que sea un solo componente que te muestre si tienes o no tienes fuga de dinero */}
         <div className="p-4 bg-white">
-          <div className="mb-6">
-            <h4 className="mb-2 font-semibold text-gray-700 text-md">Funciones del Cargo</h4>
-          </div>
           <p>
             {process.suggestion}
           </p>
