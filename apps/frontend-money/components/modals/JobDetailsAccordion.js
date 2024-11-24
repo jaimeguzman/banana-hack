@@ -31,7 +31,7 @@ const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
     <div className="overflow-hidden border rounded-lg">
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between p-4 transition-colors cursor-pointer bg-gray-20 hover:bg-gray-100"
+        className="flex items-center justify-between px-4 py-2 transition-colors cursor-pointer bg-gray-20 hover:bg-gray-100"
       >
         <h3 className="mr-2 font-semibold">Recomendaciones o Consideraciones</h3>
         {isExpanded ? (
@@ -42,16 +42,15 @@ const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
       </div>
 
       <div
-        className={`transition-all duration-300 ease-in-out ${
+        className={`transition-all duration-200 ease-in-out ${
           isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
         } overflow-hidden`}
       >
-        {/* @TODO: Refactorizar para que sea un solo componente que te muestre si tienes o no tienes fuga de dinero */}
-        <div className="p-4 bg-white">
-          <div className="mb-6">
-            <h4 className="mb-2 font-semibold text-gray-700 text-md">Funciones del Cargo</h4>
+        <div className="px-4 py-2 bg-white">
+          <div className="mb-2">
+            <h4 className="mb-1 font-semibold text-gray-700 text-md">Funciones del Cargo</h4>
             <div
-              className="ql-editor !p-0" // Aplicamos estilos de Quill sin padding
+              className="ql-editor !p-0"
               dangerouslySetInnerHTML={{
                 __html: sanitizeContent(jobFunctions) || 'No se han especificado funciones.',
               }}
@@ -59,9 +58,9 @@ const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
           </div>
 
           <div>
-            <h4 className="mb-2 font-semibold text-gray-700 text-md">Requerimientos del Cargo</h4>
+            <h4 className="mb-1 font-semibold text-gray-700 text-md">Requerimientos del Cargo</h4>
             <div
-              className="ql-editor !p-0" // Aplicamos estilos de Quill sin padding
+              className="ql-editor !p-0"
               dangerouslySetInnerHTML={{
                 __html:
                   sanitizeContent(jobRequirements) || 'No se han especificado requerimientos.',

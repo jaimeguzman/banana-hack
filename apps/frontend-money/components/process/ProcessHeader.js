@@ -126,8 +126,44 @@ const ProcessHeader = ({ reloadCandidates }) => {
         </div>
         
 
-        {/* acá puede ir el nuevo lay */}
-        <div className="grid grid-cols-3 text-base">
+        <div className="bg-white rounded-lg p-6 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
+              <p className="text-lg inline">20 oct - 19 nov, <span className="text-gray-500">2024</span>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-gray-500">Disponible</p>
+              <p className="text-2xl font-semibold">$9.138</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500">Utilizado</p>
+                <p className="text-xl font-semibold">$5.920.862</p>
+              </div>
+              <div className="text-right">
+                <p className="text-gray-500">Cupo total</p>
+                <p className="text-xl font-semibold">$5.930.000</p>
+              </div>
+            </div>
+            
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-black h-2 rounded-full" style={{ width: '99%' }} />
+            </div>
+
+            <div className="mt-6">
+
+            </div>
+          </div>
+        </div>
+        
+        {/* @TODO: Codigo para deprecar */}
+
+        {/* <div className="grid grid-cols-3 text-base">
           <div className="space-y-1">
             <p>
               <strong>Solicitado por:</strong> {process.requested_by}
@@ -152,7 +188,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <strong>Término:</strong> {formatDate(process.end_date)}
             </p>
           </div>
-        </div>
+        </div> */}
         <JobDetailsAccordion
           jobFunctions={process.job_functions}
           jobRequirements={process.job_requirements}
@@ -168,7 +204,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
               ))
             ) : (
               <Chip color="primary" variant="dot">
-                No se han especificado Categorías
+                No Especificada
               </Chip>
             )}
           </div>
