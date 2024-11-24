@@ -285,7 +285,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         />
       )}
 
-      <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
+      <div className="flex flex-col gap-3 p-4 mb-4 mt-[15px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
         <div className="flex flex-row justify-between">
           <div className="flex flex-col">
             <p className='text-bold text-xl font-bold'>Estado de cuenta</p>
