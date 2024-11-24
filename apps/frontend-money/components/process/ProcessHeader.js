@@ -1,10 +1,6 @@
-// @TODO dejar el process header de guiller pero revisar con la rama de integracion, muchos cambios.
-
-
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import UploadModal from '../UploadModal'
-// import { updateProcess } from '../../services/processService';
 import { deleteProcess } from '../../services/process/actions/deleteProcess'
 import { updateProcess } from '../../services/process/actions'
 import { useProcess } from '../../context/ProcessContext'
@@ -100,6 +96,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
     totals: { cupoTotal: 0, cupoUtilizado: 0, cupoDisponible: 0 },
     fechas: { estado: '', pago: '' }
   })
+  // EOL @TODO esto se debe evitar registrar mas de un movimiento.
 
   const handleOption = async (option) => {
     try {
@@ -124,7 +121,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
       toast?.error('Error al ejecutar la acción')
     }
   }
-
+  // @TODO - Eliminar 
   const handleDelete = async () => {
     try {
       await deleteProcess(process.id)
@@ -181,7 +178,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           <div className="flex items-center gap-1">
             <Button
               color="primary"
-              className="font-semibold relative overflow-hidden"
+              className="font-semibold relative overflow-hidden w-64"
               onClick={() => {
                 if (process.status !== 'Finalizado') {
                   setIsModalOpen(true)
