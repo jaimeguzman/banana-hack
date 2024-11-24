@@ -185,10 +185,52 @@ const CandidateTable = () => {
     }
   }, [candidates.length, process?.id]);
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const groups = [
+    {
+      icon: '🏡',
+      percentaje: 26,
+      amount: 151_466,
+      title: 'Escenciales',
+      description: 'Necesidades básicas, salud, seguros',
+    },
+    {
+      icon: '🍿',
+      percentaje: 67.5,
+      amount: 392_604,
+      title: 'Ocio',
+      description: 'Restaurantes, entretenimiento, viajes',
+    },
+    {
+      icon: '🪴',
+      percentaje: 6.5,
+      amount: 37_379,
+      title: 'Inversiones',
+      description: 'Servicios digitales, negocios',
+    },
+  ]
+
   return (
-    <div className="-mt-2 overflow-hidden bg-white rounded-lg shadow-xl shadow-primary/5">
+    <div className="-mt-2 overflow-hidden bg-white rounded-lg">
       {/* Tabs de navegación eliminadas */}
       {/* Contenedor con altura mínima */}
+      <div className="flex flex-row border-1 border-gray-300 rounded-md justify-around p-4 my-8">
+        {groups.map((group) => (
+          <div className='flex flex-col'>
+            <span className="text-gray-600">{group.icon} {group.percentaje}%</span>
+            <p className='text-2xl font-bold'>{formatCurrency(group.amount)}</p>
+            <p className='text-gray-700'>{group.title}</p>
+            <p className='text-gray-700'>{group.description}</p>
+          </div>
+        ))}
+      </div>
       <div className="min-h-[400px] overflow-auto">
         {/* Tabla de candidatos */}
         <table className="w-full text-dark-blue">
@@ -218,7 +260,7 @@ const CandidateTable = () => {
                   onClick: () => handleOptionClick('historial', candidate.id),
                 },
               ]
-                const category = candidate.category.charAt(0).toUpperCase() + candidate.category.slice(1).toLowerCase()
+              const category = candidate.category.charAt(0).toUpperCase() + candidate.category.slice(1).toLowerCase()
               const moneda = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(candidate.total);
               return (
                 <tr key={index} className="border-b hover:bg-gray-50">
