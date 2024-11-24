@@ -148,8 +148,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           </div>
         </div>
         <JobDetailsAccordion
-          jobFunctions={process.job_functions}
-          jobRequirements={process.job_requirements}
+          process={process}
         />
         <div className="flex flex-col gap-1">
           <h3 className="mr-1 font-semibold">Categorías</h3>

@@ -21,10 +21,8 @@ const sanitizeContent = (content) => {
  * Componente acordeón para mostrar detalles del trabajo
  * @component
  * @param {Object} props - Propiedades del componente
- * @param {string} props.jobFunctions - HTML con las funciones del trabajo
- * @param {string} props.jobRequirements - HTML con los requerimientos del trabajo
  */
-const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
+const JobDetailsAccordion = ({ process }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
@@ -42,32 +40,17 @@ const JobDetailsAccordion = ({ jobFunctions, jobRequirements }) => {
       </div>
 
       <div
-        className={`transition-all duration-300 ease-in-out ${
-          isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-        } overflow-hidden`}
+        className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+          } overflow-hidden`}
       >
         {/* @TODO: Refactorizar para que sea un solo componente que te muestre si tienes o no tienes fuga de dinero */}
         <div className="p-4 bg-white">
           <div className="mb-6">
             <h4 className="mb-2 font-semibold text-gray-700 text-md">Funciones del Cargo</h4>
-            <div
-              className="ql-editor !p-0" // Aplicamos estilos de Quill sin padding
-              dangerouslySetInnerHTML={{
-                __html: sanitizeContent(jobFunctions) || 'No se han especificado funciones.',
-              }}
-            />
           </div>
-
-          <div>
-            <h4 className="mb-2 font-semibold text-gray-700 text-md">Requerimientos del Cargo</h4>
-            <div
-              className="ql-editor !p-0" // Aplicamos estilos de Quill sin padding
-              dangerouslySetInnerHTML={{
-                __html:
-                  sanitizeContent(jobRequirements) || 'No se han especificado requerimientos.',
-              }}
-            />
-          </div>
+          <p>
+            {process.suggestion}
+          </p>
         </div>
       </div>
     </div>
