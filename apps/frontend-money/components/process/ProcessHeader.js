@@ -165,14 +165,14 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const fechaPagarHasta = productInfo?.fecha_pagar_hasta
     ? new Date(productInfo.fecha_pagar_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
     : new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-  const montoMinimoPagar = productInfo?.monto_minimo_pagar || 0;
+  const montoMinimoPagar = formatCurrency(productInfo?.monto_minimo_pagar) || 0;
   const fechaEstadoCuenta = productInfo?.fecha_estado_cuenta ? new Date(productInfo.fecha_pagar_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
     : new Date(2024, 9, 24).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
   const montoTotalFacturado = formatCurrency(productInfo?.monto_total_facturado || 0);
-  const cupoTotalAvanceEfectivo = productInfo?.cupo_total_avance_efectivo || 0;
+  const cupoTotalAvanceEfectivo = formatCurrency(productInfo?.cupo_total_avance_efectivo) || 0;
   const cupoUtilizadoAvanceEfectivo = productInfo?.cupo_utilizado_avance_efectivo || 0;
   const tasasInteresVigenteRotativo = productInfo?.tasas_interes_vigente_rotativo || 0;
-  const cupoDisponibleAvanceEfectivo = productInfo?.cupo_disponible_avance_efectivo || 0;
+  const cupoDisponibleAvanceEfectivo = formatCurrency(productInfo?.cupo_disponible_avance_efectivo) || 0;
   const tasasInteresVigenteAvanceCuotas = productInfo?.tasas_interes_vigente_avance_cuotas || 0;
   const tasasInteresVigenteCompraCuotas = productInfo?.tasas_interes_vigente_compra_cuotas || 0;
   const fechaTopePago = new Date(2024, 11, 5).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
@@ -251,6 +251,30 @@ const ProcessHeader = ({ reloadCandidates }) => {
     }
   ]
 
+  const groups = [
+    {
+      icon: '🏡',
+      percentaje: 26,
+      amount: 151_466,
+      title: 'Escenciales',
+      description: 'Necesidades básicas, salud, seguros',
+    },
+    {
+      icon: '🍿',
+      percentaje: 67.5,
+      amount: 392_604,
+      title: 'Ocio',
+      description: 'Restaurantes, entretenimiento, viajes',
+    },
+    {
+      icon: '🪴',
+      percentaje: 6.5,
+      amount: 37_379,
+      title: 'Inversiones',
+      description: 'Servicios digitales, negocios',
+    },
+  ]
+
   return (
     <>
       {isModalOpen && (
@@ -311,6 +335,38 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <p>Deuda total</p>
             </div>
           </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4">
+          <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
+            <div>
+              <span className="font-bold text-2xl">{montoMinimoPagar}</span>
+              <p>Compras realizadas</p>
+            </div>
+          </div>
+          <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
+            <div>
+              <span className="font-bold text-2xl">{cupoTotalAvanceEfectivo}</span>
+              <p>Pagos a la tarjeta</p>
+            </div>
+          </div>
+          <div className="rounded-md border-1 border-gray-300 col-span-1 px-8 py-4 place-content-center">
+            <div>
+              <span className="font-bold text-2xl">{cupoDisponibleAvanceEfectivo}</span>
+              <p>Intereses y cobros extra</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-row border-1 border-gray-300 rounded-md justify-around p-4">
+          {groups.map((group) => (
+            <div className='flex flex-col'>
+              <span className="text-gray-600">{group.icon} {group.percentaje}%</span>
+              <p className='text-2xl font-bold'>{formatCurrency(group.amount)}</p>
+              <p className='text-gray-700'>{group.title}</p>
+              <p className='text-gray-700'>{group.description}</p>
+            </div>
+          ))}
         </div>
 
         {/* @TODO: Codigo para deprecar */}

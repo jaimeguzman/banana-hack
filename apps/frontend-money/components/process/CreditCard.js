@@ -6,7 +6,7 @@ export const CreditCard = ({ process, nombreTitular, numeroTarjeta, cupoTotal, c
                     <h1 className="text-xl font-bold text-dark-blue">{process.name}</h1>
                     <p className="text-md font-bold text-gray-600">{nombreTitular}</p>
                 </div>
-                <h1 className="text-2xl font-bold text-dark-blue">{numeroTarjeta}</h1>
+                <h1 className="text-2xl font-bold text-dark-blue text-right">{numeroTarjeta}</h1>
             </div>
             <div className="flex flex-row justify-between">
                 <span className="text-gray-600">Cupo total</span>
