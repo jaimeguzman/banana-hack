@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.ripple-1, .ripple-2, .ripple-3 {
+  @apply bg-white/20;
+  animation-play-state: paused;
+}
+
+.group:hover .ripple-1,
+.group:hover .ripple-2,
+.group:hover .ripple-3 {
+  animation-play-state: running;
+}
+

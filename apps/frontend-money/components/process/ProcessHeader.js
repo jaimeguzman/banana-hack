@@ -99,7 +99,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <Icon icon="ph:caret-left-bold" className="text-2xl" />
             </Link>
             <div className="flex items-center gap-2">
-              <Icon icon="carbon:document-processor" className="text-2xl text-success-500" />
+              <Icon icon="ic:twotone-credit-card" className="text-2xl text-success-500" />
               <h1 className="text-2xl font-bold text-dark-blue">{process.name}</h1>
               <Chip classNames={{ content: 'text-white' }} color="success">
                 {process.status}
@@ -109,7 +109,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           <div className="flex items-center gap-1">
             <Button
               color="primary"
-              className="font-semibold"
+              className="font-semibold relative overflow-hidden"
               onClick={() => {
                 if (process.status !== 'Finalizado') {
                   setIsModalOpen(true)
@@ -117,10 +117,16 @@ const ProcessHeader = ({ reloadCandidates }) => {
               }}
               isDisabled={process.status === 'Finalizado'}
             >
-             Subir cartolas
+              <span className="relative z-10">Subir cartolas</span>
+              <span className="absolute inset-0 animate-ripple-1 bg-white/30"></span>
+              <span className="absolute inset-0 animate-ripple-2 bg-white/30"></span>
+              <span className="absolute inset-0 animate-ripple-3 bg-white/30"></span>
             </Button>
           </div>
         </div>
+        
+
+        {/* acá puede ir el nuevo lay */}
         <div className="grid grid-cols-3 text-base">
           <div className="space-y-1">
             <p>
