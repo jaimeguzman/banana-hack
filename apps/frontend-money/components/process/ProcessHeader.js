@@ -1,10 +1,6 @@
-// @TODO dejar el process header de guiller pero revisar con la rama de integracion, muchos cambios.
-
-
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import UploadModal from '../UploadModal'
-// import { updateProcess } from '../../services/processService';
 import { deleteProcess } from '../../services/process/actions/deleteProcess'
 import { updateProcess } from '../../services/process/actions'
 import { useProcess } from '../../context/ProcessContext'
@@ -14,7 +10,7 @@ import Button from '../ui/Button'
 import { Icon } from '@iconify/react'
 import { Chip } from '@nextui-org/react'
 import Link from 'next/link'
-import { fetchProductInfo } from '../../services/banks/queries';
+import { fetchProductInfo, fetchAllProductsInfo } from '../../services/banks/queries';
 
 
 /**
@@ -31,9 +27,140 @@ const ProcessHeader = ({ reloadCandidates }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [productsInfo, setProductsInfo] = useState([])
+
+  useEffect(() => {
+    const loadAllProductsInfo = async () => {
+      console.log('🔍 Debug - Starting loadAllProductsInfo')
+      console.log('📌 process?.id:', process?.id)
+
+      try {
+        if (process?.id) {
+          const data = await fetchAllProductsInfo()
+          console.log('✅ Raw data received:', data)
+
+          // Filtramos y parseamos los productos de manera segura
+          const processProducts = data
+            .filter(item => item.process_id === process.id)
+            .map(item => {
+              try {
+                // Intentamos parsear el JSON si es string
+                const parsedProduct = item.product && typeof item.product === 'string' 
+                  ? JSON.parse(item.product) 
+                  : item.product
+
+                return {
+                  ...item,
+                  product: parsedProduct || {}
+                }
+              } catch (parseError) {
+                console.error('Error parsing product JSON:', parseError)
+                return {
+                  ...item,
+                  product: {}
+                }
+              }
+            })
+            .filter(item => item.product && Object.keys(item.product).length > 0)
+
+          console.log('✅ Processed products:', processProducts)
+          setProductsInfo(processProducts)
+        }
+      } catch (error) {
+        console.error('❌ Error loading products info:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadAllProductsInfo()
+  }, [process?.id])
+
+  // Calculamos totales y obtenemos las fechas
+  // @TODO - Acá debe ir la logica para calcular los totales, pero 
+  // se debe dejar un calculo que permita ir por movimiento y no por todos.
+  const { totals, fechas } = productsInfo.reduce((acc, curr) => {
+    const product = curr.product || {}
+    return {
+      totals: {
+        cupoTotal: acc.totals.cupoTotal + (Number(product.cupo_total) || 0),
+        cupoUtilizado: acc.totals.cupoUtilizado + (Number(product.cupo_utilizado) || 0),
+        cupoDisponible: acc.totals.cupoDisponible + (Number(product.cupo_disponible) || 0)
+      },
+      fechas: {
+        estado: product.fecha_estado_cuenta || acc.fechas.estado,
+        pago: product.fecha_pagar_hasta || acc.fechas.pago
+      }
+    }
+  }, { 
+    totals: { cupoTotal: 0, cupoUtilizado: 0, cupoDisponible: 0 },
+    fechas: { estado: '', pago: '' }
+  })
+  // EOL @TODO esto se debe evitar registrar mas de un movimiento.
+
+  // 
+
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const productData = await fetchProductInfo();
+        console.log('🏦 Product Data:', {
+          productData,
+          type: typeof productData,
+          keys: Object.keys(productData || {})
+        });
+      } catch (error) {
+        console.error('❌ Error getting product:', error);
+      }
+    };
+    
+    getProduct();
+  }, []);
+
+
+  const [productInfo, setProductInfo] = useState(null);
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const productData = await fetchProductInfo();
+        setProductInfo(productData);
+      } catch (error) {
+        console.error('❌ Error getting product:', error);
+      }
+    };
+    
+    getProduct();
+  }, []);
+
+  // Ahora puedes acceder a productInfo en cualquier parte del componente
+  const cupoTotal = productInfo?.cupo_total || 0;
+  const caeRotativo = productInfo?.cae_rotativo || 0;
+  const cupoUtilizado = productInfo?.cupo_utilizado || 0;
+  const nombreTitular = productInfo?.nombre_titular || '';
+  const numeroTarjeta = productInfo?.numero_tarjeta || '';
+  const cupoDisponible = productInfo?.cupo_disponible || 0;
+  const caeAvanceCuotas = productInfo?.cae_avance_cuotas || 0;
+  const caeCompraCuotas = productInfo?.cae_compra_cuotas || 0;
+  const fechaPagarHasta = productInfo?.fecha_pagar_hasta || '';
+  const montoMinimoPagar = productInfo?.monto_minimo_pagar || 0;
+  const fechaEstadoCuenta = productInfo?.fecha_estado_cuenta || '';
+  const montoTotalFacturado = productInfo?.monto_total_facturado || 0;
+  const cupoTotalAvanceEfectivo = productInfo?.cupo_total_avance_efectivo || 0;
+  const cupoUtilizadoAvanceEfectivo = productInfo?.cupo_utilizado_avance_efectivo || 0;
+  const tasasInteresVigenteRotativo = productInfo?.tasas_interes_vigente_rotativo || 0;
+  const cupoDisponibleAvanceEfectivo = productInfo?.cupo_disponible_avance_efectivo || 0;
+  const tasasInteresVigenteAvanceCuotas = productInfo?.tasas_interes_vigente_avance_cuotas || 0;
+  const tasasInteresVigenteCompraCuotas = productInfo?.tasas_interes_vigente_compra_cuotas || 0;
+
+
+  
 
 
 
+
+  
 
   const handleOption = async (option) => {
     try {
@@ -58,7 +185,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
       toast?.error('Error al ejecutar la acción')
     }
   }
-
+  // @TODO - Eliminar 
   const handleDelete = async () => {
     try {
       await deleteProcess(process.id)
@@ -115,7 +242,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
           <div className="flex items-center gap-1">
             <Button
               color="primary"
-              className="font-semibold relative overflow-hidden"
+              className="font-semibold relative overflow-hidden w-64"
               onClick={() => {
                 if (process.status !== 'Finalizado') {
                   setIsModalOpen(true)
@@ -130,77 +257,56 @@ const ProcessHeader = ({ reloadCandidates }) => {
             </Button>
           </div>
         </div>
-        {/*  */
-        
-        }
+
 
         <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
-              <p className="text-lg inline">20 oct - 19 nov, <span className="text-gray-500">2024</span>
-              </p>
+              <h2 className=" inline">Inicio de facturación: </h2>
+              <p className="text-lg inline">{fechas.estado || ''} - Fecha de pago: {fechas.pago || ''}</p>
             </div>
             <div className="text-right">
-              <p className="text-gray-500">Disponible</p>
-              <p className="text-2xl font-semibold">$9.138</p>
+              <p className="text-gray-500">Disponible Total</p>
+              <p className="text-2xl font-semibold">
+                ${cupoDisponible?.toLocaleString('es-CL') || '0'}
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-gray-500">Utilizado</p>
-                <p className="text-xl font-semibold">$5.920.862</p>
+                <p className="text-gray-500">Utilizado Total</p>
+                <p className="text-xl font-semibold">
+                  ${cupoUtilizado.toLocaleString('es-CL')}
+                </p>
               </div>
               <div className="text-right">
-                <p className="text-gray-500">Cupo total</p>
-                <p className="text-xl font-semibold"> XXXXX </p>
-
+                <p className="text-gray-500">Cupo Total</p>
+                <p className="text-xl font-semibold">
+                  ${cupoTotal.toLocaleString('es-CL')}
+                </p>
               </div>
             </div>
             
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-black h-2 rounded-full" style={{ width: '99%' }} />
+              <div 
+                className="bg-black h-2 rounded-full" 
+                style={{ 
+                  width: `${Math.min(100, (cupoUtilizado / cupoTotal) * 100 || 0)}%` 
+                }} 
+              />
             </div>
 
-            <div className="mt-6">
-
-            </div>
           </div>
         </div>
         
         {/* @TODO: Codigo para deprecar */}
 
-        {/* <div className="grid grid-cols-3 text-base">
-          <div className="space-y-1">
-            <p>
-              <strong>Solicitado por:</strong> {process.requested_by}
-            </p>
-            <p>
-              <strong>Área:</strong> {process.area}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p>
-              <strong>Modalidad:</strong> {process.modality}
-            </p>
-            <p>
-              <strong>Inicio:</strong> {formatDate(process.start_date)}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p>
-              <strong>Creado por:</strong> {process.created_by}
-            </p>
-            <p>
-              <strong>Término:</strong> {formatDate(process.end_date)}
-            </p>
-          </div>
-        </div> */}
         <JobDetailsAccordion
           process={process}
         />
+
         <div className="flex items-center gap-2">
           <h3 className="font-semibold">Categorías:</h3>
           <div className="flex flex-wrap items-center gap-1">
