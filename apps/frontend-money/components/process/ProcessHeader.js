@@ -224,7 +224,6 @@ const ProcessHeader = ({ reloadCandidates }) => {
           reloadCandidates={reloadCandidates}
         />
       )}
-<<<<<<< HEAD
 
       <div className="flex flex-col gap-3 p-4 mb-4 mt-[45px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
         <div className="flex flex-row justify-between">
@@ -234,23 +233,6 @@ const ProcessHeader = ({ reloadCandidates }) => {
               <span className='font-bold'>{fechaEstadoCuenta}</span>
               -
               <span className='font-bold'>{fechaPagarHasta}</span>
-=======
-      <div className="flex flex-col gap-3 p-4 mb-4 mt-[15px] bg-white rounded-lg shadow-xl shadow-primary/5 text-dark-blue">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Link 
-              href="/" 
-              className="flex items-center text-primary hover:text-primary/80 transition-colors"
-            >
-              <Icon icon="ph:caret-left-bold" className="text-2xl" />
-            </Link>
-            <div className="flex items-center gap-2">
-              <Icon icon="ic:twotone-credit-card" className="text-2xl text-success-500" />
-              <h1 className="text-2xl font-bold text-dark-blue">{process.name}</h1>
-              <Chip classNames={{ content: 'text-white' }} color="success">
-                {process.status}
-              </Chip>
->>>>>>> 33af305d167dc541acdbd13ecf78906bb997e1a5
             </div>
           </div>
           <Button
