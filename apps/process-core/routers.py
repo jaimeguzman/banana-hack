@@ -18,25 +18,7 @@ from utils import (
     insert_suggestion_to_supabase,
 )
 
-# @TODO esto se debe recuperar de la base de datos.
-# Descripción del trabajo
-JOB_DESCRIPTION = """
-Job functions
-Cooperar en el planteamiento y diseño de aplicaciones base web orientadas a dispositivos móviles y escritorio.
-Desarrollar sistemas web tipo Single Page Application.
-Realizar animaciones complejas de elementos web, utilizando estándares de tecnologías web.
-Contribuir en el modelamiento, implementación y mantención de estructuras de diseño orientadas a la Interfaz (UI) y a la usabilidad (UX).
-Qualifications and requirements
-Conocimientos en lenguajes de programación Javascript/Typescript.
-Experiencia en tecnologías web HTML, CSS, SCSS.
-Experiencia demostrable trabajando con algún framework de desarrollo web en Javascript (por ejemplo Angular, React, Vue.JS, entre otros).
-Conocimiento en uso e implementación de API REST.
-Experiencia en desarrollo de aplicaciones y páginas web responsivas (Responsive).
-Conocimiento en uso de almacenamientos permanentes y temporales de navegadores web como cookies, sesiones, local storage, etc.
-Experiencia utilizando frameworks de diseño tales como Bootstrap o Material Design.
-Experiencia demostrable realizando e implementando animaciones de elementos web en HTML5 y CSS3.
-Manejo básico de GIT para versión de código.
-"""
+ 
 
 # Cargar variables de entorno
 load_dotenv()
