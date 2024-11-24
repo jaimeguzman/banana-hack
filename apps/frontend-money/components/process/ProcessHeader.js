@@ -126,7 +126,7 @@ const ProcessHeader = ({ reloadCandidates }) => {
         </div>
         
 
-        <div className="bg-white rounded-lg p-6 mb-6">
+        <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
