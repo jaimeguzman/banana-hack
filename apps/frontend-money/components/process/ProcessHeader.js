@@ -192,9 +192,9 @@ const ProcessHeader = ({ reloadCandidates }) => {
         <JobDetailsAccordion
           process={process}
         />
-        <div className="flex flex-col gap-1">
-          <h3 className="mr-1 font-semibold">Categorías</h3>
-          <div className="flex flex-wrap gap-1">
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold">Categorías:</h3>
+          <div className="flex flex-wrap items-center gap-1">
             {process.requiredSkills && process.requiredSkills.length > 0 ? (
               process.requiredSkills.map((skill) => (
                 <Chip key={skill.value} color="primary" variant="dot">
