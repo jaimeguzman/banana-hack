@@ -31,7 +31,7 @@ export default function Home() {
         </div> */}
         
         <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
-          <CandidatesAttention />
+          {/* <CandidatesAttention /> */}
           <div className="space-y-4">
           {/* <RecentCandidates /> */}
           </div>
