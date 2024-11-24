@@ -25,13 +25,19 @@ export const fetchBanks = async () => {
 // ... existing code ...
 
 /**
- * Obtiene la información del producto de un candidato específico
- * 
+ * Obtiene la información del producto para un proceso específico
+ * @param {string} processId - ID del proceso
+ * @returns {Promise<Object>} Información del producto
+ * @throws {Error} Si hay un error en la consulta o el processId es inválido
  */
-export const fetchProductInfo = async () => {
+export const fetchProductInfo = async (processId) => {
+  if (!processId) {
+    throw new Error('ProcessId es requerido para obtener la información del producto')
+  }
+
   try {
-    const userSession = localStorage.getItem('userSession');
-    const user = JSON.parse(userSession);
+    const userSession = localStorage.getItem('userSession')
+    const user = JSON.parse(userSession)
 
     const { data, error } = await supabase
       .from('candidates')
@@ -41,13 +47,22 @@ export const fetchProductInfo = async () => {
         product
       `)      
       .eq('user_id', user.username)
+      .eq('process_id', processId)
       .single()
 
     if (error) throw error
-    console.log('\n\n📦 Product info:', data.product)
-    return data.product
+
+    console.log('\n\n📦 Product info for process:', {
+      processId,
+      product: data?.product
+    })
+
+    return data?.product || null
   } catch (error) {
-    console.error('Error fetching product info:', error)
+    console.error('Error fetching product info:', {
+      error,
+      processId
+    })
     throw error
   }
 }

@@ -102,20 +102,31 @@ const ProcessHeader = ({ reloadCandidates }) => {
 
   useEffect(() => {
     const getProduct = async () => {
+      if (!process?.id) {
+        console.warn('⚠️ No process ID available')
+        return
+      }
+
       try {
-        const productData = await fetchProductInfo();
-        console.log('\n\n\n🏦 Product Data:', {
+        const productData = await fetchProductInfo(process.id)
+        setProductInfo(productData)
+        
+        console.log('🏦 Product Data:', {
+          processId: process.id,
           productData,
           type: typeof productData,
           keys: Object.keys(productData || {})
-        });
+        })
       } catch (error) {
-        console.error('❌ Error getting product:', error);
+        console.error('❌ Error getting product:', {
+          error,
+          processId: process.id
+        })
       }
-    };
+    }
 
-    getProduct();
-  }, []);
+    getProduct()
+  }, [process?.id])
 
 
   const [productInfo, setProductInfo] = useState(null);
