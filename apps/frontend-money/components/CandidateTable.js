@@ -189,34 +189,26 @@ const CandidateTable = () => {
     }).format(amount)
   }
 
-  const categoriesNames = candidates.map((candidate) => candidate.category)
-  const escencialesNames = ['salud', 'seguros', 'supermercados']
-  const ocioNames = ['restaurantes', 'entretenimiento', 'viajes']
-  const inversionesNames = ['servicios digitales', 'negocios']
-
-  const escenciales = candidates.filter((candidate) => escencialesNames.includes(candidate.category)).map((candidate) => candidate.total).reduce((acc, total) => acc + total, 0)
-  const ocio = candidates.filter((candidate) => ocioNames.includes(candidate.category)).map((candidate) => candidate.total).reduce((acc, total) => acc + total, 0)
-  const inversiones = candidates.filter((candidate) => inversionesNames.includes(candidate.category)).map((candidate) => candidate.total).reduce((acc, total) => acc + total, 0)
 
   const groups = [
     {
       icon: '🏡',
       percentaje: 26,
-      amount: escenciales,
+      amount: 145_000,
       title: 'Escenciales',
       description: 'Necesidades básicas, salud, seguros',
     },
     {
       icon: '🍿',
       percentaje: 67.5,
-      amount: ocio,
+      amount: 134_000,
       title: 'Ocio',
       description: 'Restaurantes, entretenimiento, viajes',
     },
     {
       icon: '🪴',
       percentaje: 6.5,
-      amount: inversiones,
+      amount: 123_000,
       title: 'Inversiones',
       description: 'Servicios digitales, negocios',
     },
@@ -265,7 +257,6 @@ const CandidateTable = () => {
                   onClick: () => handleOptionClick('historial', candidate.id),
                 },
               ]
-              const category = candidate.category.charAt(0).toUpperCase() + candidate.category.slice(1).toLowerCase()
               const moneda = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(candidate.total);
               return (
                 <tr key={index} className="border-b hover:bg-gray-50">
@@ -274,7 +265,7 @@ const CandidateTable = () => {
                   </td>
                   <td className="px-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-primary hover:brightness-75">{category}</span>
+                      <span className="text-primary hover:brightness-75">{candidate.category}</span>
                     </div>
                   </td>
                   <td className={styles.td}>{moneda}</td>
