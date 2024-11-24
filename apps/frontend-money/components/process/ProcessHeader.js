@@ -80,15 +80,24 @@ const ProcessHeader = ({ reloadCandidates }) => {
     loadAllProductsInfo()
   }, [process?.id])
 
-  // Calculamos totales de manera segura
-  const totals = productsInfo.reduce((acc, curr) => {
+  // Calculamos totales y obtenemos las fechas
+  const { totals, fechas } = productsInfo.reduce((acc, curr) => {
     const product = curr.product || {}
     return {
-      cupoTotal: acc.cupoTotal + (Number(product.cupo_total) || 0),
-      cupoUtilizado: acc.cupoUtilizado + (Number(product.cupo_utilizado) || 0),
-      cupoDisponible: acc.cupoDisponible + (Number(product.cupo_disponible) || 0)
+      totals: {
+        cupoTotal: acc.totals.cupoTotal + (Number(product.cupo_total) || 0),
+        cupoUtilizado: acc.totals.cupoUtilizado + (Number(product.cupo_utilizado) || 0),
+        cupoDisponible: acc.totals.cupoDisponible + (Number(product.cupo_disponible) || 0)
+      },
+      fechas: {
+        estado: product.fecha_estado_cuenta || acc.fechas.estado,
+        pago: product.fecha_pagar_hasta || acc.fechas.pago
+      }
     }
-  }, { cupoTotal: 0, cupoUtilizado: 0, cupoDisponible: 0 })
+  }, { 
+    totals: { cupoTotal: 0, cupoUtilizado: 0, cupoDisponible: 0 },
+    fechas: { estado: '', pago: '' }
+  })
 
   const handleOption = async (option) => {
     try {
@@ -192,8 +201,8 @@ const ProcessHeader = ({ reloadCandidates }) => {
         <div className="bg-white rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-gray-500 mb-1 inline">Total Candidatos: </h2>
-              <p className="text-lg inline">{productsInfo.length}</p>
+              <h2 className="text-gray-500 mb-1 inline">Periodo de facturación: </h2>
+              <p className="text-lg inline">{fechas.estado || ''} - {fechas.pago || ''}</p>
             </div>
             <div className="text-right">
               <p className="text-gray-500">Disponible Total</p>
