@@ -4,7 +4,7 @@
     // descripción de una frase y directa al grano de la solución
     "oneliner": "Kairo - Mejora tus finanzas, Controla tus intereses, no pagues de mas con Kairo AI.",
     // url al logo de proyecto. mínimo 200x200, png. puede estar hosteado en el mismo repo.
-    "logo_url": "https://raw.githubusercontent.com/jaimeguzman/banana-hack/refs/heads/develop/apps/frontend-money/public/logo.png",
+    "logo_url": "https://raw.githubusercontent.com/jaimeguzman/banana-hack/refs/heads/develop/docs/favicon-kairos.png",
     // url para acceder a su app. si es apk u otro, link de descarga directa.
     "app_url": "https://kairos-ai.framer.website"
 }
